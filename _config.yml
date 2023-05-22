@@ -1,0 +1,21 @@
+title: 不知名旅行日记
+author: 野原新之助2
+email: beilanzhisen@163.com
+description: 那就记录一个人的生活吧
+
+social:
+  # twitter: joaomlneto
+  # facebook: joaomlneto
+  # instagram: joaomlneto
+  github: waidinsamkeit
+  # linkedin:
+
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+collections:
+  images:
+    output: true
