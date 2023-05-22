@@ -12,8 +12,8 @@
       <div id="main">
         {% for image in site.images %}
         <article class="thumb">
-          <a href="{{ image.url }}" class="image">
-            <img src="{{ image.url }}" alt="{{ image.title }}" />
+          <a href="{{ image.images }}" class="image">
+            <img src="{{ image.images }}" alt="{{ image.title }}" />
           </a>
           <h2>{{ image.title }}</h2>
           <p>{{ image.caption }}</p>
