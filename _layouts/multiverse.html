@@ -10,7 +10,8 @@
       {%- include header.html -%}
 
       <div id="main">
-        {% for image in site.images %}
+        {% assign sorted_images = site.images | sort: '-date' | reverse %}
+        {% for image in sorted_images %}
         <article class="thumb">
           <a href="{{ image.images }}" class="image">
             <img src="{{ image.images }}" alt="{{ image.title }}" />
