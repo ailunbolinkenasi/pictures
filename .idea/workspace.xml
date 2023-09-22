@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b227e446-ea66-4ec0-9f1b-4af09b058b1e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitmodules" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/3f596893cbcf93a4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/index.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/北京植物园.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/十七孔桥.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/华为欧洲小镇.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/故人归归乡.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/旅行者.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/昆明湖.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/松山湖入口处.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/松树叶子.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/松湖烟雨.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/珠海.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/祈年殿.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/草地.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/虎门大桥.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/西海岸.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/角楼.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/贝加尔湖.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/路上随便拍的.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/车流.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/达古冰川的缆车.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/野狐岛.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/雁栖湖森林.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/雁栖湖步道小楼梯.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/雪山.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/颐和园-十七孔桥.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/2023/颐和园里面随便拍的.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/_index.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/pexels-pok-rie-2049422.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/tianjin/13a6b5fe9b014a98ffeeb10b4827cb88.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/tianjin/44699e238c2495e6da14cf6033bb0e05.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/tianjin/8b3e876fa241e6cb9042eaa964676913.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/tianjin/a8375a8e4478af9a9803808ad9690d3c.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/tianjin/bb04d0d10b2e1f76c065136ddd4d31e8.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/tianjin/bbe877c27f32393c300db9bbc3f9baa2.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/tianjin/cf683ae5de9973e69dd133cca63cae06.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/tianjin/fe9b9467b6b2de6f292bfccc02be199b.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/content/live/tianjin/index.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/themes/gallery" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/pictures_web.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/404.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemfile.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_config.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/01.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/02.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/03.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/04.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/05.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/06.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/07.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/08.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/09.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/10.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/11.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/12.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/13.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/14.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/15.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/北京植物园.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/天津之夜.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/旅行者.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/昆明湖.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/松树叶子.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/珠海1.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/珠海2.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/祈年殿.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/角楼.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/车流.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/达古冰川缆车.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/雁栖湖森林.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/雪山.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_images/颐和园.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_includes/footer.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_includes/google-analytics.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_includes/head.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_includes/header.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_includes/social.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_layouts/multiverse.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/404.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/css/fontawesome-all.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/css/images/arrow.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/css/images/close.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/css/images/spinner.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/css/main.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/css/noscript.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/css/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/js/breakpoints.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/js/browser.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/js/jquery.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/js/jquery.poptrox.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/js/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/js/util.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/sass/main.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/sass/noscript.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/webfonts/fa-brands-400.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/webfonts/fa-brands-400.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/webfonts/fa-brands-400.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/webfonts/fa-brands-400.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/webfonts/fa-brands-400.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/webfonts/fa-regular-400.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/webfonts/fa-regular-400.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/webfonts/fa-regular-400.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/webfonts/fa-regular-400.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/webfonts/fa-regular-400.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/webfonts/fa-solid-900.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/webfonts/fa-solid-900.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/webfonts/fa-solid-900.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/webfonts/fa-solid-900.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/assets/webfonts/fa-solid-900.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/feed.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/01.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/02.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/03.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/04.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/05.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/06.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/07.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/08.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/09.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/10.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/11.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/12.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/13.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/14.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/15.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/北京植物园.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/天津之夜.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/旅行者.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/昆明湖.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/松树叶子.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/珠海1.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/珠海2.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/祈年殿.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/角楼.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/车流.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/达古冰川缆车.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/雁栖湖森林.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/雪山.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/images/颐和园.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_site/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/css/fontawesome-all.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/css/images/arrow.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/css/images/close.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/css/images/spinner.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/css/main.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/css/noscript.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/breakpoints.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/browser.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/jquery.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/jquery.poptrox.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/util.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/base/_page.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/base/_reset.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/base/_typography.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/components/_actions.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/components/_button.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/components/_form.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/components/_icon.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/components/_icons.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/components/_list.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/components/_panel.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/components/_poptrox-popup.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/components/_table.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/layout/_footer.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/layout/_header.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/layout/_main.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/layout/_wrapper.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/libs/_breakpoints.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/libs/_functions.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/libs/_mixins.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/libs/_vars.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/libs/_vendor.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/main.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sass/noscript.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/webfonts/fa-brands-400.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/webfonts/fa-brands-400.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/webfonts/fa-brands-400.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/webfonts/fa-brands-400.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/webfonts/fa-brands-400.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/webfonts/fa-regular-400.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/webfonts/fa-regular-400.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/webfonts/fa-regular-400.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/webfonts/fa-regular-400.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/webfonts/fa-regular-400.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/webfonts/fa-solid-900.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/webfonts/fa-solid-900.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/webfonts/fa-solid-900.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/webfonts/fa-solid-900.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/webfonts/fa-solid-900.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/gallery/exampleSite/content/_index.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/gallery/exampleSite/content/about.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/gallery/exampleSite/content/animals/_index.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/gallery/exampleSite/content/animals/cats/index.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/gallery/exampleSite/content/animals/dogs/index.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/gallery/exampleSite/content/fashion-beauty/index.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/gallery/exampleSite/content/imprint.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/gallery/exampleSite/content/nature/index.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/gallery/exampleSite/content/private/index.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/gallery/layouts/partials/page_header.html" beforeDir="false" afterPath="$PROJECT_DIR$/themes/gallery/layouts/partials/page_header.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/gallery/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/themes/gallery/package-lock.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JupyterTrust" id="655f5da0-5f8f-43ab-93a9-7dc217b194fe" />
+  <component name="ProjectId" id="2VjPXr4T9hFHCO5bct3LExIsGAm" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/content/live" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/content/live" />
+      <recent name="$PROJECT_DIR$/content/anny/2021" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/content/live/tianjin" />
+      <recent name="$PROJECT_DIR$/content/animals" />
+      <recent name="$PROJECT_DIR$/content/live" />
+      <recent name="$PROJECT_DIR$/content/live/2023" />
+      <recent name="$PROJECT_DIR$/content/live/2020" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b227e446-ea66-4ec0-9f1b-4af09b058b1e" name="Default Changelist" comment="" />
+      <created>1695346559445</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1695346559445</updated>
+      <workItem from="1695346560655" duration="8935000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="413" y="256" key="SettingsEditor" timestamp="1695354686442">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="413" y="256" key="SettingsEditor/0.23.1680.1027@0.23.1680.1027" timestamp="1695354686442" />
+    <state x="505" y="250" width="670" height="676" key="search.everywhere.popup" timestamp="1695361539402">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="505" y="250" width="670" height="676" key="search.everywhere.popup/0.23.1680.1027@0.23.1680.1027" timestamp="1695361539402" />
+  </component>
+</project>
