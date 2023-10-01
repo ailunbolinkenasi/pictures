@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>/live/</loc>
-    <lastmod>2023-09-29T00:00:00+02:00</lastmod>
+    <lastmod>2023-10-01T00:00:00+02:00</lastmod>
   </url><url>
     <loc>/animals/</loc>
     <lastmod>2023-04-01T00:00:00+02:00</lastmod>
@@ -11,7 +11,10 @@
     <loc>/nature/</loc>
   </url><url>
     <loc>/</loc>
-    <lastmod>2023-09-29T00:00:00+02:00</lastmod>
+    <lastmod>2023-10-01T00:00:00+02:00</lastmod>
+  </url><url>
+    <loc>/live/shenzhen/</loc>
+    <lastmod>2023-10-01T00:00:00+02:00</lastmod>
   </url><url>
     <loc>/live/guangzhou/</loc>
     <lastmod>2023-09-29T00:00:00+02:00</lastmod>
