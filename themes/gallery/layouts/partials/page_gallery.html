@@ -18,7 +18,7 @@
           {{ end }}
         {{ end }}
         {{ $thumbnail := ($original.Fit (printf "%s %s" "800x800" $rotation)) }}
-        {{ $full := ($original.Fit (printf "%s %s" "1600x1600" $rotation)) }}
+        {{ $full := ($original.Fit (printf "%s %s" "1920x1080" $rotation)) }}
         {{ $color := index $thumbnail.Colors 0 | default "transparent" }}
         <a
           href="{{ $original.RelPermalink }}"

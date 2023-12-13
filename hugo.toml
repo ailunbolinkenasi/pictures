@@ -10,7 +10,7 @@ theme = "gallery"
 [params]
   title = "时光相册"
   description = "Example site for hugo-theme-gallery"
-  defaultTheme = "dark"
+  defaultTheme = "light"
 
 [author]
   name = "iren"
