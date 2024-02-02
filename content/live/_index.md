@@ -1,8 +1,10 @@
 ---
-title: 地球Online旅行日记
-description: 启用了略缩图可能观感画质会受到影响，如需观看请下载原图,感谢您的支持。
-featured_image: pexels-pok-rie-2049422.jpg
-weight: 1
+title: 不知名旅行日记
+linktitle: 主页
+description: 那就记录一个人的生活吧
+date: 2024-01-31
+featured_image: pexels-tookapic-7976.jpg # default: first image in this directory
+# featured_image on the home page is used for OpenGraph cards, etc.
 
-# list pages require at least one image to be displayed.
+# sub-galleries on list pages are sorted by date and weight (descending)
 ---
