@@ -2,82 +2,82 @@
 <rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>不知名旅行日记</title>
-    <link>/</link>
+    <link>//localhost:1313/</link>
     <description>Recent content on 不知名旅行日记</description>
     
     <language>en-us</language>
     <copyright>© 太阳可以是蓝色</copyright>
-    <lastBuildDate>Wed, 31 Jan 2024 00:00:00 +0100</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" /><item>
+    <lastBuildDate>Wed, 31 Jan 2024 00:00:00 +0100</lastBuildDate><atom:link href="//localhost:1313/index.xml" rel="self" type="application/rss+xml" /><item>
       <title>秦皇岛</title>
-      <link>/live/qinhuangdao/</link>
+      <link>//localhost:1313/live/qinhuangdao/</link>
       <pubDate>Sun, 03 Dec 2023 00:00:00 +0100</pubDate>
       
-      <guid>/live/qinhuangdao/</guid><media:content url="/live/qinhuangdao/DSC01584_huc1669521b4092f7808039df2501a4be9_3539393_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
+      <guid>//localhost:1313/live/qinhuangdao/</guid><media:content url="//localhost:1313/live/qinhuangdao/DSC01584_huc1669521b4092f7808039df2501a4be9_3539393_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
         <description>
-          &lt;img src=&quot;/live/qinhuangdao/DSC01584_huc1669521b4092f7808039df2501a4be9_3539393_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
+          &lt;img src=&quot;//localhost:1313/live/qinhuangdao/DSC01584_huc1669521b4092f7808039df2501a4be9_3539393_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
           &lt;p&gt;吹吹海风听听歌&lt;/p&gt;
         </description></item><item>
       <title>深圳</title>
-      <link>/live/shenzhen/</link>
+      <link>//localhost:1313/live/shenzhen/</link>
       <pubDate>Sun, 01 Oct 2023 00:00:00 +0200</pubDate>
       
-      <guid>/live/shenzhen/</guid><media:content url="/live/shenzhen/DSC01557_hu4c0ec863b7a34870e024d46bf511ef9a_1226529_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
+      <guid>//localhost:1313/live/shenzhen/</guid><media:content url="//localhost:1313/live/shenzhen/DSC01557_hu4c0ec863b7a34870e024d46bf511ef9a_1226529_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
         <description>
-          &lt;img src=&quot;/live/shenzhen/DSC01557_hu4c0ec863b7a34870e024d46bf511ef9a_1226529_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
+          &lt;img src=&quot;//localhost:1313/live/shenzhen/DSC01557_hu4c0ec863b7a34870e024d46bf511ef9a_1226529_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
           &lt;p&gt;深圳摄影合集&lt;/p&gt;
         </description></item><item>
       <title>广州</title>
-      <link>/live/guangzhou/</link>
+      <link>//localhost:1313/live/guangzhou/</link>
       <pubDate>Fri, 29 Sep 2023 00:00:00 +0200</pubDate>
       
-      <guid>/live/guangzhou/</guid><media:content url="/live/guangzhou/DSC01533_hu88af348f3aeac38a13bf5375e0db9e74_1129054_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
+      <guid>//localhost:1313/live/guangzhou/</guid><media:content url="//localhost:1313/live/guangzhou/DSC01533_hu88af348f3aeac38a13bf5375e0db9e74_1129054_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
         <description>
-          &lt;img src=&quot;/live/guangzhou/DSC01533_hu88af348f3aeac38a13bf5375e0db9e74_1129054_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
+          &lt;img src=&quot;//localhost:1313/live/guangzhou/DSC01533_hu88af348f3aeac38a13bf5375e0db9e74_1129054_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
           &lt;p&gt;广州摄影合集&lt;/p&gt;
         </description></item><item>
       <title>阿坝甘孜藏族自治州</title>
-      <link>/live/sichuan/</link>
+      <link>//localhost:1313/live/sichuan/</link>
       <pubDate>Mon, 21 Aug 2023 00:00:00 +0200</pubDate>
       
-      <guid>/live/sichuan/</guid><media:content url="/live/sichuan/%E8%BE%BE%E5%8F%A4%E5%86%B0%E5%B7%9D%E7%9A%84%E7%BC%86%E8%BD%A6_hu0d8dc18e0e2f52842500cd1cd1bd963a_197033_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
+      <guid>//localhost:1313/live/sichuan/</guid><media:content url="//localhost:1313/live/sichuan/%E8%BE%BE%E5%8F%A4%E5%86%B0%E5%B7%9D%E7%9A%84%E7%BC%86%E8%BD%A6_hu0d8dc18e0e2f52842500cd1cd1bd963a_197033_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
         <description>
-          &lt;img src=&quot;/live/sichuan/%E8%BE%BE%E5%8F%A4%E5%86%B0%E5%B7%9D%E7%9A%84%E7%BC%86%E8%BD%A6_hu0d8dc18e0e2f52842500cd1cd1bd963a_197033_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
+          &lt;img src=&quot;//localhost:1313/live/sichuan/%E8%BE%BE%E5%8F%A4%E5%86%B0%E5%B7%9D%E7%9A%84%E7%BC%86%E8%BD%A6_hu0d8dc18e0e2f52842500cd1cd1bd963a_197033_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
           &lt;p&gt;川西之旅&lt;/p&gt;
         </description></item><item>
       <title>天津</title>
-      <link>/live/tianjin/</link>
+      <link>//localhost:1313/live/tianjin/</link>
       <pubDate>Sat, 01 Apr 2023 00:00:00 +0200</pubDate>
       
-      <guid>/live/tianjin/</guid><media:content url="/live/tianjin/bbe877c27f32393c300db9bbc3f9baa2_hu502f0ad8c92b09d545b119dfe8139718_2333909_900x600_fill_q75_catmullrom_smart1.JPG" type="image/jpeg"/>
+      <guid>//localhost:1313/live/tianjin/</guid><media:content url="//localhost:1313/live/tianjin/bbe877c27f32393c300db9bbc3f9baa2_hu502f0ad8c92b09d545b119dfe8139718_2333909_900x600_fill_q75_catmullrom_smart1.JPG" type="image/jpeg"/>
         <description>
-          &lt;img src=&quot;/live/tianjin/bbe877c27f32393c300db9bbc3f9baa2_hu502f0ad8c92b09d545b119dfe8139718_2333909_900x600_fill_q75_catmullrom_smart1.JPG&quot; /&gt;
+          &lt;img src=&quot;//localhost:1313/live/tianjin/bbe877c27f32393c300db9bbc3f9baa2_hu502f0ad8c92b09d545b119dfe8139718_2333909_900x600_fill_q75_catmullrom_smart1.JPG&quot; /&gt;
           &lt;p&gt;天津旅游摄影合集&lt;/p&gt;
         </description></item><item>
       <title>珠海</title>
-      <link>/live/zhuhai/</link>
+      <link>//localhost:1313/live/zhuhai/</link>
       <pubDate>Sat, 01 Apr 2023 00:00:00 +0200</pubDate>
       
-      <guid>/live/zhuhai/</guid><media:content url="/live/zhuhai/%E7%8F%A0%E6%B5%B7_hu140feac60e6ad324b203b9f1a1112990_83877_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
+      <guid>//localhost:1313/live/zhuhai/</guid><media:content url="//localhost:1313/live/zhuhai/%E7%8F%A0%E6%B5%B7_hu140feac60e6ad324b203b9f1a1112990_83877_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
         <description>
-          &lt;img src=&quot;/live/zhuhai/%E7%8F%A0%E6%B5%B7_hu140feac60e6ad324b203b9f1a1112990_83877_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
+          &lt;img src=&quot;//localhost:1313/live/zhuhai/%E7%8F%A0%E6%B5%B7_hu140feac60e6ad324b203b9f1a1112990_83877_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
           &lt;p&gt;珠海还是那个珠海 你已经不再是你&lt;/p&gt;
         </description></item><item>
       <title>东莞</title>
-      <link>/live/dongguan/</link>
+      <link>//localhost:1313/live/dongguan/</link>
       <pubDate>Wed, 01 Feb 2023 00:00:00 +0100</pubDate>
       
-      <guid>/live/dongguan/</guid><media:content url="/live/dongguan/%E8%99%8E%E9%97%A8%E5%A4%A7%E6%A1%A5_hu4cc41b036cb740e8f51d68b34cc80910_62674_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
+      <guid>//localhost:1313/live/dongguan/</guid><media:content url="//localhost:1313/live/dongguan/%E8%99%8E%E9%97%A8%E5%A4%A7%E6%A1%A5_hu4cc41b036cb740e8f51d68b34cc80910_62674_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
         <description>
-          &lt;img src=&quot;/live/dongguan/%E8%99%8E%E9%97%A8%E5%A4%A7%E6%A1%A5_hu4cc41b036cb740e8f51d68b34cc80910_62674_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
+          &lt;img src=&quot;//localhost:1313/live/dongguan/%E8%99%8E%E9%97%A8%E5%A4%A7%E6%A1%A5_hu4cc41b036cb740e8f51d68b34cc80910_62674_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
           &lt;p&gt;I💗东莞&lt;/p&gt;
         </description></item><item>
       <title>北京</title>
-      <link>/live/beijing/</link>
+      <link>//localhost:1313/live/beijing/</link>
       <pubDate>Tue, 16 Aug 2022 00:00:00 +0200</pubDate>
       
-      <guid>/live/beijing/</guid><media:content url="/live/beijing/3081706664459_.pic_hd_hu0a08eac21532bf2d9a2cb014b6863de5_2719109_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
+      <guid>//localhost:1313/live/beijing/</guid><media:content url="//localhost:1313/live/beijing/3081706664459_.pic_hd_hu0a08eac21532bf2d9a2cb014b6863de5_2719109_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
         <description>
-          &lt;img src=&quot;/live/beijing/3081706664459_.pic_hd_hu0a08eac21532bf2d9a2cb014b6863de5_2719109_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
+          &lt;img src=&quot;//localhost:1313/live/beijing/3081706664459_.pic_hd_hu0a08eac21532bf2d9a2cb014b6863de5_2719109_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
           &lt;p&gt;那是你离开了北京的生活&lt;/p&gt;
         </description></item>
   </channel>
