@@ -2,35 +2,35 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>//localhost:1313/</loc>
+    <loc>/live/beijing/</loc>
+    <lastmod>2024-03-24T00:00:00+01:00</lastmod>
+  </url><url>
+    <loc>/</loc>
     <lastmod>2024-01-31T00:00:00+01:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/live/</loc>
+    <loc>/live/</loc>
     <lastmod>2024-01-31T00:00:00+01:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/live/qinhuangdao/</loc>
+    <loc>/live/qinhuangdao/</loc>
     <lastmod>2023-12-03T00:00:00+01:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/live/shenzhen/</loc>
+    <loc>/live/shenzhen/</loc>
     <lastmod>2023-10-01T00:00:00+02:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/live/guangzhou/</loc>
+    <loc>/live/guangzhou/</loc>
     <lastmod>2023-09-29T00:00:00+02:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/live/sichuan/</loc>
+    <loc>/live/sichuan/</loc>
     <lastmod>2023-08-21T00:00:00+02:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/live/tianjin/</loc>
+    <loc>/live/tianjin/</loc>
     <lastmod>2023-04-01T00:00:00+02:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/live/zhuhai/</loc>
+    <loc>/live/zhuhai/</loc>
     <lastmod>2023-04-01T00:00:00+02:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/live/dongguan/</loc>
+    <loc>/live/dongguan/</loc>
     <lastmod>2023-02-01T00:00:00+01:00</lastmod>
   </url><url>
-    <loc>//localhost:1313/live/beijing/</loc>
-    <lastmod>2022-08-16T00:00:00+02:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/about/</loc>
+    <loc>/about/</loc>
   </url></urlset>
