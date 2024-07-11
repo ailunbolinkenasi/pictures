@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>不知名旅行日记 on 镜头下的诗</title>
+    <title>Home on 太阳可以是蓝色 の 作品集</title>
     <link>/</link>
-    <description>Recent content in 不知名旅行日记 on 镜头下的诗</description>
+    <description>Recent content in Home on 太阳可以是蓝色 の 作品集</description>
     
     <language>en-us</language>
     <copyright>© 太阳可以是蓝色</copyright>
@@ -12,18 +12,27 @@
       <link>/100000/</link>
       <pubDate>Sun, 24 Mar 2024 00:00:00 +0100</pubDate>
       
-      <guid>/100000/</guid><media:content url="/100000/3081706664459_.pic_hd_hu0a08eac21532bf2d9a2cb014b6863de5_2719109_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
+      <guid>/100000/</guid><media:content url="/100000/0Z2-SNS-DVL-WZ1-VCX_hu9b0d269b3f6d7d9c51198fd73844c754_2284780_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
         <description>
-          &lt;img src=&quot;/100000/3081706664459_.pic_hd_hu0a08eac21532bf2d9a2cb014b6863de5_2719109_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
+          &lt;img src=&quot;/100000/0Z2-SNS-DVL-WZ1-VCX_hu9b0d269b3f6d7d9c51198fd73844c754_2284780_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
           &lt;p&gt;那是你离开了北京的生活&lt;/p&gt;
+        </description></item><item>
+      <title>Humanity-人文影像</title>
+      <link>/humanity/</link>
+      <pubDate>Wed, 31 Jan 2024 00:00:00 +0100</pubDate>
+      
+      <guid>/humanity/</guid><media:content url="/humanity/hung-pham_hu5459c0360c2b0cb7a147d2df0eb350ca_675012_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
+        <description>
+          &lt;img src=&quot;/humanity/hung-pham_hu5459c0360c2b0cb7a147d2df0eb350ca_675012_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
+          &lt;p&gt;&lt;no value&gt;&lt;/p&gt;
         </description></item><item>
       <title>秦皇岛</title>
       <link>/066000/</link>
       <pubDate>Sun, 03 Dec 2023 00:00:00 +0100</pubDate>
       
-      <guid>/066000/</guid><media:content url="/066000/DSC01584_huc1669521b4092f7808039df2501a4be9_3539393_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
+      <guid>/066000/</guid><media:content url="/066000/AC7-OYT-I67-M58-IP4_hu6dae316f98ef0c9695411041bf95d8dc_976943_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
         <description>
-          &lt;img src=&quot;/066000/DSC01584_huc1669521b4092f7808039df2501a4be9_3539393_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
+          &lt;img src=&quot;/066000/AC7-OYT-I67-M58-IP4_hu6dae316f98ef0c9695411041bf95d8dc_976943_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
           &lt;p&gt;吹吹海风听听歌&lt;/p&gt;
         </description></item><item>
       <title>深圳</title>
@@ -75,9 +84,9 @@
       <link>/523000/</link>
       <pubDate>Wed, 01 Feb 2023 00:00:00 +0100</pubDate>
       
-      <guid>/523000/</guid><media:content url="/523000/%E8%99%8E%E9%97%A8%E5%A4%A7%E6%A1%A5_hu4cc41b036cb740e8f51d68b34cc80910_62674_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
+      <guid>/523000/</guid><media:content url="/523000/098-JMO-IZA-5UH-JXH_hu9cd23989aa3fb6da5340521083ee1812_4262020_900x600_fill_q75_catmullrom_smart1.jpg" type="image/jpeg"/>
         <description>
-          &lt;img src=&quot;/523000/%E8%99%8E%E9%97%A8%E5%A4%A7%E6%A1%A5_hu4cc41b036cb740e8f51d68b34cc80910_62674_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
+          &lt;img src=&quot;/523000/098-JMO-IZA-5UH-JXH_hu9cd23989aa3fb6da5340521083ee1812_4262020_900x600_fill_q75_catmullrom_smart1.jpg&quot; /&gt;
           &lt;p&gt;欢迎你来到广东-东莞-邮编地址：523000&lt;/p&gt;
         </description></item>
   </channel>
