@@ -1,10 +1,6 @@
 ---
-title: 不知名旅行日记
+title: Home
 linktitle: 主页
-description: 那就记录一个人的生活吧
+description: 那就来看看我的照片吧
 date: 2024-01-31
-featured_image: martin-martz-wRuhOOaG-Z4-unsplash.jpg # default: first image in this directory
-# featured_image on the home page is used for OpenGraph cards, etc.
-
-# sub-galleries on list pages are sorted by date and weight (descending)
 ---

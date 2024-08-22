@@ -1,4 +1,5 @@
-title = "不知名旅行日记"
+title = "太阳可以是蓝色 の 作品集"
+description="123"
 languageCode = "en-us"
 copyright = "© 太阳可以是蓝色"
 disableKinds = ["taxonomy", "term"]
@@ -11,7 +12,6 @@ theme = "gallery"
   title = "时光相册"
   description = "Example site for hugo-theme-gallery"
   defaultTheme = "light"
-
 [author]
   name = "iren"
 
@@ -54,8 +54,3 @@ theme = "gallery"
     source = "assets/.*\\.(.*)$"
     target = "$1"
 
-#[menu]
-#[[menu.footer]]
-#  name = "GitHub"
-#  url = "https://github.com/nicokaiser/hugo-theme-gallery/"
-#  weight = 3
