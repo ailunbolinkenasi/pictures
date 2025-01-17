@@ -21,7 +21,7 @@
   <meta property="article:modified_time" content="2024-01-31T00:00:00+01:00" /><meta property="og:site_name" content="时光相册" />
 
   
-  <link rel="stylesheet" href="/css/main.min.c04f66fc1fc86e40d7717834adcaf972285ca6a73dc1034160f3b88788f33d90.css" />
+  <link rel="stylesheet" href="/css/main.min.07ab77c5d7cbaf9227a983789f3d0043b1a20a6ac263a493e30efd0fc0b45a10.css" />
   
   
   
@@ -65,6 +65,12 @@
       <li itemscope itemtype="http://www.schema.org/SiteNavigationElement">
         <a aria-current="false" href="/about/" itemprop="url">
           <span itemprop="name">关于小站</span>
+        </a>
+      </li>
+    
+      <li itemscope itemtype="http://www.schema.org/SiteNavigationElement">
+        <a aria-current="false" href="/update/" itemprop="url">
+          <span itemprop="name">更新日记</span>
         </a>
       </li>
     
@@ -113,18 +119,18 @@
         document.addEventListener("DOMContentLoaded", () => {
             const lazyImages = document.querySelectorAll(".lazyload");
             if ("IntersectionObserver" in window) {
-                let lazyImageObserver = new IntersectionObserver((entries, observer) => {
+                let observer = new IntersectionObserver((entries, observer) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
                             let lazyImage = entry.target;
                             lazyImage.src = lazyImage.dataset.src;
                             lazyImage.classList.remove("lazyload");
-                            lazyImageObserver.unobserve(lazyImage);
+                            observer.unobserve(lazyImage);
                         }
                     });
                 });
                 lazyImages.forEach(lazyImage => {
-                    lazyImageObserver.observe(lazyImage);
+                    observer.observe(lazyImage);
                 });
             } else {
                 lazyImages.forEach(lazyImage => {
@@ -133,6 +139,7 @@
                 });
             }
         });
+
     </script>
 </head>
 <body>
@@ -282,7 +289,6 @@
     </section>
 </body>
 </html>
-
   
 
 
