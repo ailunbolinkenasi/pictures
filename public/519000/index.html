@@ -21,11 +21,16 @@
   <meta property="article:modified_time" content="2023-04-01T00:00:00+02:00" /><meta property="og:site_name" content="时光相册" />
 
   
-  <link rel="stylesheet" href="/css/main.min.07ab77c5d7cbaf9227a983789f3d0043b1a20a6ac263a493e30efd0fc0b45a10.css" />
+  <link rel="stylesheet" href="/css/main.min.716fc98e4df8f4e4c0d3d5a8aecb5870f201eb6b8b9e2c854f2f82e80dacddf7.css" />
   
   
   
-  <script src="/js/main.64868ea2cfa671267b57ebb83bbd8fe90eb9b2a50c91e4e037348a389c272b73.js" defer></script></head>
+  <script src="/js/main.64868ea2cfa671267b57ebb83bbd8fe90eb9b2a50c91e4e037348a389c272b73.js" defer></script>
+
+<script src="/js/photoswipe-custom.js" type="module"></script>
+
+<link rel="stylesheet" href="/css/image-animations.css" />
+</head>
 
   <body>
     <header>
@@ -92,59 +97,144 @@
   </hgroup>
 
 
-  <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        .loading-spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left: 4px solid #333;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-            display: none;  
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .gallery-item {
-            transition: transform 0.3s ease;
-            margin: 10px;  
-        }
-        .gallery-item:hover {
-            transform: scale(1.1);
-        }
+  <style>
+    .gallery-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 20px;
+    }
+    .gallery-item {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    .gallery-item:hover {
+        transform: translateY(-5px);
+    }
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    .gallery-item:hover img {
+        transform: scale(1.05);
+    }
+    .loading-spinner {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        z-index: 1000;
+    }
+    @keyframes spin {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    .image-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 10px;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+    }
+    .gallery-item:hover .image-caption {
+        transform: translateY(0);
+    }
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const lazyImages = document.querySelectorAll(".lazyload");
+            const imageOptions = {
+                root: null,
+                rootMargin: '100px 0px', 
+                threshold: 0.01 
+            };
+
             if ("IntersectionObserver" in window) {
-                let observer = new IntersectionObserver((entries, observer) => {
+                const loadImage = (image) => {
+                    
+                    image.classList.add("lazyloading");
+                    
+                    const img = new Image();
+                    img.src = image.dataset.src;
+                    img.onload = () => {
+                        
+                        image.src = image.dataset.src;
+                        image.classList.remove("lazyload");
+                        image.classList.remove("lazyloading");
+                        image.classList.add("lazyloaded");
+                        
+                        
+                        image.offsetHeight;
+                    };
+                    
+                    
+                    img.onerror = () => {
+                        image.classList.remove("lazyloading");
+                        console.log("图片加载失败:", image.dataset.src);
+                    };
+                };
+
+                const handleIntersection = (entries, observer) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
-                            let lazyImage = entry.target;
-                            lazyImage.src = lazyImage.dataset.src;
-                            lazyImage.classList.remove("lazyload");
-                            observer.unobserve(lazyImage);
+                            loadImage(entry.target);
+                            observer.unobserve(entry.target);
+                            
+                            
+                            let currentItem = entry.target.closest('.gallery-item');
+                            let nextItem = currentItem?.nextElementSibling;
+                            
+                            
+                            if (nextItem) {
+                                const nextImage = nextItem.querySelector('.lazyload');
+                                if (nextImage) {
+                                    const preloadImage = new Image();
+                                    preloadImage.src = nextImage.dataset.src;
+                                }
+                                
+                                
+                                let nextNextItem = nextItem.nextElementSibling;
+                                if (nextNextItem) {
+                                    const nextNextImage = nextNextItem.querySelector('.lazyload');
+                                    if (nextNextImage) {
+                                        setTimeout(() => {
+                                            const preloadNextImage = new Image();
+                                            preloadNextImage.src = nextNextImage.dataset.src;
+                                        }, 200); 
+                                    }
+                                }
+                            }
                         }
                     });
-                });
-                lazyImages.forEach(lazyImage => {
-                    observer.observe(lazyImage);
-                });
+                };
+
+                const observer = new IntersectionObserver(handleIntersection, imageOptions);
+                lazyImages.forEach(img => observer.observe(img));
             } else {
-                lazyImages.forEach(lazyImage => {
-                    lazyImage.src = lazyImage.dataset.src;
-                    lazyImage.classList.remove("lazyload");
-                });
+                
+                const loadImagesImmediately = () => {
+                    lazyImages.forEach(image => {
+                        image.src = image.dataset.src;
+                        image.classList.remove("lazyload");
+                        image.classList.add("lazyloaded");
+                    });
+                };
+                loadImagesImmediately();
             }
         });
-
     </script>
 </head>
 <body>

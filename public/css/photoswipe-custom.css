@@ -1,0 +1,97 @@
+.pswp {
+  --pswp-bg: rgba(0, 0, 0, 0.85);
+  --pswp-placeholder-bg: rgba(0, 0, 0, 0.5);
+  --pswp-root-z-index: 9999;
+  
+  --pswp-preloader-color: rgba(255, 255, 255, 0.8);
+  --pswp-preloader-color-secondary: rgba(255, 255, 255, 0.4);
+  
+  --pswp-icon-color: #fff;
+  --pswp-icon-color-secondary: #4f4f4f;
+  --pswp-icon-stroke-color: #4f4f4f;
+  --pswp-icon-stroke-width: 2px;
+  
+  --pswp-error-text-color: var(--pswp-icon-color);
+}
+
+/* 模态框动画效果 */
+.pswp__dynamic-caption {
+  background: rgba(0, 0, 0, 0.75);
+  max-width: 100%;
+  padding: 15px;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.5;
+  border-radius: 4px;
+  transition: opacity 0.3s;
+}
+
+/* 缩放指示器样式 */
+.pswp__zoom-indicator {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 1;
+}
+
+.pswp__zoom-indicator--visible {
+  opacity: 1;
+}
+
+/* 计数器样式 */
+.pswp__counter {
+  font-size: 14px;
+  color: #fff;
+  padding: 0 10px;
+}
+
+/* 下载按钮样式 */
+.pswp__button--download {
+  background: none;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+.pswp__button--download:hover {
+  opacity: 1;
+}
+
+/* 图片加载动画 */
+.pswp__img--placeholder {
+  background-color: var(--pswp-placeholder-bg);
+  animation: pswp-placeholder-pulse 1s ease infinite;
+}
+
+@keyframes pswp-placeholder-pulse {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+/* 移动设备优化 */
+@media (max-width: 600px) {
+  .pswp__dynamic-caption {
+    padding: 10px;
+    font-size: 12px;
+  }
+  
+  .pswp__zoom-indicator {
+    top: 10px;
+    padding: 3px 8px;
+    font-size: 12px;
+  }
+}
