@@ -19,18 +19,30 @@
 <meta property="og:url" content="/404.html" /><meta property="og:site_name" content="时光相册" />
 
   
-  <link rel="stylesheet" href="/css/main.min.f42528bdd31262b0dcd2bbfde7d25808e0db1bc4c159dafe373a20e44ecb8fcf.css" />
+  <link rel="stylesheet" href="/css/main.min.5e8fd9decc9f87937337f44fcebfe5424687b21c779838cb0fcb0459342aef8d.css" />
   
   
   
   <script src="/js/main.64868ea2cfa671267b57ebb83bbd8fe90eb9b2a50c91e4e037348a389c272b73.js" defer></script>
-
-<script src="/js/photoswipe-custom.js" type="module"></script>
-
-<link rel="stylesheet" href="/css/image-animations.css" />
 </head>
 
   <body>
+    <div id="site-loader">
+    <l-bouncy
+      size="100"
+      speed="1.75"
+      color="var(--text-1)"
+    ></l-bouncy>
+  </div>
+  
+  <script>
+    window.addEventListener('load', function() {
+      document.getElementById('site-loader').style.opacity = 0;
+      setTimeout(function() {
+        document.getElementById('site-loader').style.display = 'none';
+      }, 600);
+    });
+  </script>
     <header>
   
     <a class="btn btn-square" href="/" title="Home">
@@ -98,5 +110,7 @@
   </section>
 </footer>
 
+    <script src="/js/scroll-animations.js" defer></script>
+    <script src="/js/loading-effects.js" defer></script>
   </body>
 </html>
