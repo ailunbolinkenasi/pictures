@@ -1,0 +1,249 @@
+---
+import siteConfig from '../../site.config.mjs';
+
+const owner = siteConfig.owner;
+const base = import.meta.env.BASE_URL;
+const currentYear = new Date().getFullYear();
+---
+
+<div class="relative w-full overflow-hidden">
+	<!-- 吉卜力风格背景层 -->
+	<div class="absolute inset-0 -z-20 bg-gradient-to-b from-blue-50 via-blue-50/70 to-amber-50/30"></div>
+
+	<!-- 手绘云朵装饰元素 -->
+	<div class="absolute inset-0 -z-10 opacity-80 overflow-hidden">
+		<!-- 第一层云朵 - 慢速飘动 -->
+		<div class="absolute top-10 left-[5%] w-40 h-24 bg-white rounded-full blur-lg opacity-70 animate-cloud1"></div>
+		<div class="absolute top-[15%] right-[10%] w-64 h-32 bg-white rounded-[100%_100%_60%_100%] blur-lg opacity-60 animate-cloud2"></div>
+		<div class="absolute top-[40%] left-[15%] w-52 h-28 bg-white rounded-[100%_100%_0%_100%] blur-lg opacity-50 animate-cloud3"></div>
+		
+		<!-- 第二层云朵 - 中速飘动 -->
+		<div class="absolute bottom-[30%] right-[5%] w-48 h-28 bg-white rounded-full blur-lg opacity-60 animate-cloud4"></div>
+		<div class="absolute bottom-[10%] left-[30%] w-32 h-20 bg-white rounded-[100%_60%_100%_100%] blur-lg opacity-70 animate-cloud5"></div>
+		
+		<!-- 微妙的色彩点缀 -->
+		<div class="absolute top-1/4 left-1/3 w-16 h-16 rounded-full bg-yellow-100/40 blur-2xl"></div>
+		<div class="absolute top-2/3 right-1/4 w-20 h-20 rounded-full bg-blue-100/30 blur-2xl"></div>
+		<div class="absolute bottom-1/3 left-2/3 w-24 h-24 rounded-full bg-green-100/20 blur-2xl"></div>
+	</div>
+
+	<!-- 前景光效 - 吉卜力的自然光芒效果 -->
+	<div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.4)_0%,rgba(255,255,255,0)_60%)] opacity-70"></div>
+	<div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_70%_80%,rgba(255,252,245,0.3)_0%,rgba(255,255,255,0)_50%)] opacity-60"></div>
+
+	<div class="container mx-auto px-4 py-12 md:py-16 relative z-10 flex flex-col justify-center items-center">
+		<!-- 主内容卡片 - 手绘质感 -->
+		<div class="w-full max-w-5xl mx-auto text-center relative">
+			<!-- 手绘质感装饰 - 顶部花草元素 -->
+			<div class="absolute -top-16 left-1/2 transform -translate-x-1/2 w-full max-w-md h-24 opacity-80 hidden md:block">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 120" class="w-full h-full">
+					<path d="M400,100 C360,90 320,110 280,100 C240,90 200,110 160,100 C120,90 80,110 40,100 L40,0 L760,0 L760,100 C720,110 680,90 640,100 C600,110 560,90 520,100 C480,110 440,90 400,100 Z" fill="none" stroke="#94a3b8" stroke-width="1" opacity="0.3" />
+					<g fill="#047857" opacity="0.6">
+						<circle cx="160" cy="70" r="2" />
+						<circle cx="200" cy="80" r="2" />
+						<circle cx="240" cy="65" r="2" />
+						<circle cx="280" cy="75" r="2" />
+						<circle cx="320" cy="65" r="2" />
+						<circle cx="360" cy="80" r="2" />
+						<circle cx="400" cy="70" r="2" />
+						<circle cx="440" cy="65" r="2" />
+						<circle cx="480" cy="75" r="2" />
+						<circle cx="520" cy="65" r="2" />
+						<circle cx="560" cy="80" r="2" />
+						<circle cx="600" cy="70" r="2" />
+						<circle cx="640" cy="75" r="2" />
+					</g>
+					<g>
+						<path d="M160,70 C170,50 180,60 180,40 C180,30 170,20 160,10" fill="none" stroke="#047857" stroke-width="1" />
+						<path d="M320,65 C330,45 340,55 340,35 C340,25 330,15 320,5" fill="none" stroke="#047857" stroke-width="1" />
+						<path d="M480,75 C490,55 500,65 500,45 C500,35 490,25 480,15" fill="none" stroke="#047857" stroke-width="1" />
+						<path d="M640,75 C650,55 660,65 660,45 C660,35 650,25 640,15" fill="none" stroke="#047857" stroke-width="1" />
+					</g>
+				</svg>
+			</div>
+
+			<!-- 水彩质感背景卡片 -->
+			<div class="relative p-8 sm:p-10 md:p-12 rounded-xl overflow-hidden backdrop-blur-[2px] shadow-[0_3px_15px_rgba(0,0,0,0.05)]">
+				<!-- 水彩背景效果 -->
+				<div class="absolute inset-0 bg-white mix-blend-soft-light opacity-80"></div>
+				<div class="absolute inset-0 bg-gradient-to-br from-amber-50/90 via-white/90 to-blue-50/90 mix-blend-normal"></div>
+				<!-- 卡片纹理 -->
+				<div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxsaW5lIHgxPSIwIiB5PSIwIiB4Mj0iMCIgeTI9IjQwIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMC4xIiBzdHJva2Utb3BhY2l0eT0iMC4wMiIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==')] opacity-10"></div>
+				
+				<!-- 手绘边框 -->
+				<div class="absolute inset-1 border border-[#2c3e50]/10 rounded-lg opacity-20"></div>
+				<div class="absolute inset-[5px] border border-slate-900/5 rounded-lg opacity-30"></div>
+				
+				<!-- 内容区域 -->
+				<div class="relative z-10 space-y-6 md:space-y-8">
+					<!-- 标题组 - 吉卜力风格手绘感 -->
+					<div class="space-y-1 sm:space-y-2">
+						<h1 class="relative inline-block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight text-slate-900 animate-fade-in">
+							<span class="relative inline-block">
+								定格
+								<span class="absolute -left-1 -right-1 bottom-2 h-[0.18em] bg-emerald-600/20 rounded transform rotate-[-0.8deg] translate-y-1/2 skew-x-[-4deg]"></span>
+							</span>
+							<span class="relative inline-block ml-2 text-emerald-800">
+								世界
+								<span class="absolute -left-1 -right-1 bottom-2 h-[0.18em] bg-amber-300/30 rounded transform rotate-[0.6deg] translate-y-1/2 skew-x-[2deg]"></span>
+							</span>
+							<!-- 手绘小装饰 -->
+							<span class="absolute -top-8 -right-6 text-2xl text-amber-500/80 rotate-[14deg] hidden sm:inline-block">✦</span>
+							<span class="absolute -bottom-7 -left-6 text-2xl text-emerald-500/80 rotate-[-12deg] hidden sm:inline-block">✧</span>
+		</h1>
+						
+						<!-- 副标题 - 带有柔和手绘效果 -->
+						<p class="relative inline-block mt-6 text-lg sm:text-xl md:text-2xl text-slate-700 max-w-2xl mx-auto animate-fade-in-delayed font-sans">
+							<span class="relative">
+								摄影不只是记录，更是对世界的独特解读
+								<svg class="absolute -bottom-3 left-0 right-0 w-full h-2 text-emerald-900/20" preserveAspectRatio="none" viewBox="0 0 150 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M2 3C20 1 60 0 120 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+								</svg>
+							</span>
+						</p>
+					</div>
+					
+					<!-- 按钮组 - 吉卜力风格按钮 -->
+					<div class="pt-6 sm:pt-8 flex flex-col sm:flex-row justify-center items-center gap-5 sm:gap-7">
+						<!-- 主要行动按钮 - 手绘质感按钮 -->
+						<a
+							href={`/collections`}
+							class="group relative w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 sm:py-4 
+								bg-emerald-700/90 hover:bg-emerald-700 rounded-lg text-white
+								text-base sm:text-lg font-medium tracking-wide
+								transition-all duration-500 ease-out
+								transform hover:scale-[1.02] active:scale-[0.98] 
+								focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2
+								shadow-[0_4px_10px_rgba(16,185,129,0.1)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.18)]
+								overflow-hidden"
+							aria-label="	"
+						>
+							<!-- 手绘纹理背景 -->
+							<span class="absolute inset-0 w-full h-full bg-[radial-gradient(circle_at_30%_107%,rgba(255,255,255,0.13)_0%,rgba(255,255,255,0.03)_5%,rgba(255,255,255,0)_45%)] opacity-80"></span>
+							<span class="absolute inset-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iODAiIGhlaWdodD0iODAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSgzMCkiPjxsaW5lIHgxPSIwIiB5MT0iMCIgeDI9IjgwIiB5Mj0iMCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDQiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjcGF0dGVybikiLz48L3N2Zz4=')] opacity-20"></span>
+							
+							<!-- 按钮内容 -->
+							<span class="relative flex items-center">
+								<span>浏览我的作品</span>
+								<svg class="w-5 h-5 ml-2 transition-transform duration-500 ease-out transform group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
+									<path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+								</svg>
+							</span>
+							
+							<!-- 鼠标悬停动画效果 -->
+							<span class="absolute bottom-0 left-0 h-1 w-0 bg-white/20 group-hover:w-full transition-all duration-500 ease-out"></span>
+						</a>
+						
+						<!-- 次要按钮 - 水墨风格 -->
+						<a
+							href={`/about`}
+							class="group relative hidden sm:inline-flex items-center justify-center px-6 py-3 sm:py-4 
+								bg-white/80 hover:bg-white/90 border-2 border-slate-200/80 rounded-lg
+								text-slate-700 hover:text-slate-900
+								text-base sm:text-lg font-medium tracking-wide
+								transition-all duration-500 ease-out
+								transform hover:scale-[1.02] active:scale-[0.98]
+								focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-2
+								shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)]
+								overflow-hidden"
+							aria-label="了解一下我"
+						>
+							<!-- 手绘纹理背景 -->
+							<span class="absolute inset-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxjaXJjbGUgY3g9IjIwIiBjeT0iMjAiIHI9IjEiIGZpbGw9IiM0NzU1NjkiIGZpbGwtb3BhY2l0eT0iMC4wMyIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==')] opacity-50"></span>
+							
+							<!-- 按钮内容 -->
+							<span class="relative flex items-center">
+								<span>了解一下我</span>
+							</span>
+							
+							<!-- 鼠标悬停动画效果 -->
+							<span class="absolute bottom-0 left-0 h-[2px] w-0 bg-emerald-600/20 group-hover:w-full transition-all duration-500 ease-out"></span>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<!-- 手绘风格小动物装饰 - 只在桌面端显示 -->
+			<div class="absolute -bottom-12 -right-16 w-32 h-32 opacity-0 md:opacity-80 transition-all duration-[1.5s] ease-out translate-y-8 group-hover:translate-y-0">
+				<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+					<!-- 简化的龙猫轮廓 - 只有简单形状暗示 -->
+					<path d="M50,20 C35,20 25,35 25,50 C25,65 35,80 50,80 C65,80 75,65 75,50 C75,35 65,20 50,20 Z" fill="#475569" fill-opacity="0.1" stroke="#475569" stroke-width="0.5" stroke-opacity="0.3"/>
+					<ellipse cx="40" cy="45" rx="2" ry="3" fill="#475569" fill-opacity="0.4"/>
+					<ellipse cx="60" cy="45" rx="2" ry="3" fill="#475569" fill-opacity="0.4"/>
+				</svg>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 前景装饰元素 - 在底部添加微妙的森林线条元素 -->
+	<div class="absolute bottom-0 left-0 right-0 h-16 md:h-24 pointer-events-none">
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" class="w-full h-full transform scale-y-[0.8]">
+			<g stroke="#047857" stroke-width="0.5" stroke-opacity="0.15" fill="none">
+				<!-- 简化的树木和植物线条 -->
+				<path d="M0,100 L0,70 L10,80 L20,60 L30,70" />
+				<path d="M50,100 L50,50 L40,60 L50,70 L60,60" />
+				<!-- 其他树木线条 -->
+				<path d="M120,100 L120,40 L110,60 L120,70 L130,50" />
+				<path d="M240,100 L240,45 L230,60 L240,70 L250,50" />
+				<path d="M360,100 L360,65 L350,75 L370,80" />
+				<path d="M480,100 L480,50 L470,60 L480,70 L490,55" />
+				<path d="M600,100 L600,60 L590,70 L610,75" />
+				<path d="M720,100 L720,40 L710,60 L720,70 L730,50" />
+				<path d="M840,100 L840,65 L830,75 L850,80" />
+				<path d="M960,100 L960,50 L950,60 L960,70 L970,55" />
+				<path d="M1080,100 L1080,60 L1070,70 L1090,75" />
+				<path d="M1200,100 L1200,45 L1190,60 L1200,70 L1210,50" />
+				<path d="M1320,100 L1320,65 L1310,75 L1330,80" />
+				<path d="M1440,100 L1440,70 L1430,80 L1420,60 L1410,70" />
+			</g>
+		</svg>
+	</div>
+</div>
+
+<!-- 动画定义 -->
+<style>
+	/* 基础淡入动画 */
+	.animate-fade-in {
+		animation: fadeIn 1.5s ease-out forwards;
+	}
+	
+	.animate-fade-in-delayed {
+		animation: fadeIn 2s 0.3s ease-out forwards;
+		opacity: 0;
+	}
+	
+	/* 云朵漂浮动画 */
+	.animate-cloud1 {
+		animation: float 45s ease-in-out infinite;
+	}
+	
+	.animate-cloud2 {
+		animation: float 60s ease-in-out infinite reverse;
+	}
+	
+	.animate-cloud3 {
+		animation: float 55s ease-in-out infinite;
+		animation-delay: 1s;
+	}
+	
+	.animate-cloud4 {
+		animation: float 40s ease-in-out infinite;
+	}
+	
+	.animate-cloud5 {
+		animation: float 35s ease-in-out infinite reverse;
+	}
+	
+	@keyframes fadeIn {
+		from { opacity: 0; transform: translateY(10px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
+	
+	@keyframes float {
+		0% { transform: translateY(0) translateX(0); }
+		25% { transform: translateY(-8px) translateX(8px); }
+		50% { transform: translateY(0) translateX(0); }
+		75% { transform: translateY(8px) translateX(-8px); }
+		100% { transform: translateY(0) translateX(0); }
+	}
+</style>

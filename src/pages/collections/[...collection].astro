@@ -1,0 +1,86 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import PhotoGrid from '../../components/PhotoGrid.astro';
+import {
+	getCollections,
+	getImages,
+	getImagesByCollection,
+} from '../../data/imageStore';
+
+const allCollection = {
+	id: undefined,
+	name: 'All',
+};
+const collections = [allCollection, ...(await getCollections())];
+const { collection } = Astro.params;
+const images = collection
+	? await getImagesByCollection(collection)
+	: await getImages();
+const base = import.meta.env.BASE_URL;
+
+export const getStaticPaths = async () => {
+	return [{ id: undefined }, ...(await getCollections())].map((collection) => {
+		return {
+			params: { collection: collection.id },
+		};
+	});
+};
+---
+
+<MainLayout>
+	<section class="py-16 pt-24">
+		<div class="container mx-auto px-4">
+			<div class="mb-16 text-center">
+				<h1 class="text-4xl md:text-5xl font-bold mb-6 relative inline-block">
+					<span class="relative z-10">摄影集</span>
+					<span class="absolute -bottom-2 left-0 w-full h-3 bg-yellow-200/60 -rotate-1 z-0"></span>
+				</h1>
+				<p class="text-gray-600 text-lg max-w-2xl mx-auto">
+					探索我的摄影世界，感受光与影的独特故事
+				</p>
+			</div>
+
+			<!-- 集合导航 - 现代化设计 -->
+			<div class="flex justify-center mb-10">
+				<div class="inline-flex flex-wrap gap-2 justify-center bg-gray-50 p-2 rounded-xl shadow-sm">
+					{
+						collections.map((collectionBtn) => (
+							<a
+								href={`/collections/${collectionBtn.id ? collectionBtn.id : ''}`}
+								class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 rounded-lg transition-all duration-300"
+								aria-current={collectionBtn.id === collection ? "page" : undefined}
+							>
+								<div
+									class={`px-4 py-2 rounded-lg transition-all duration-300 ${
+										collectionBtn.id === collection
+											? 'bg-gray-800 text-white shadow-md transform -translate-y-0.5'
+											: 'bg-white text-gray-700 hover:bg-gray-100 hover:shadow-sm'
+									}`}
+								>
+									{collectionBtn.name}
+								</div>
+							</a>
+						))
+					}
+				</div>
+			</div>
+
+			<!-- 使用优化后的PhotoGrid组件 -->
+			<PhotoGrid images={images} />
+			
+			<!-- 返回首页按钮 -->
+			<div class="text-center mt-12">
+				<a 
+					href="/" 
+					class="inline-flex items-center justify-center px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+					aria-label="返回首页"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+						<path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+					</svg>
+					<span>返回首页</span>
+				</a>
+			</div>
+		</div>
+	</section>
+</MainLayout>

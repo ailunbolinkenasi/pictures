@@ -1,0 +1,6 @@
+collections:
+  - id: beijing
+    name: 北京风光
+  - id: tianjin
+    name: 天津风貌
+  # 可以添加更多集合 

@@ -1,0 +1,13 @@
+images:
+  - path: tianjin1.jpg
+    meta:
+      title: 天津之眼
+      description: 天津地标性建筑天津之眼
+      collections: [featured]
+      
+  - path: tianjin2.jpg
+    meta:
+      title: 五大道
+      description: 天津五大道的西式建筑风情
+      
+  # 更多图片... 

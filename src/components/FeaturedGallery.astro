@@ -1,0 +1,37 @@
+---
+import PhotoGrid from './PhotoGrid.astro';
+import {
+	featuredCollectionId,
+	getImagesByCollection,
+} from '../data/imageStore';
+
+const images = await getImagesByCollection(featuredCollectionId);
+---
+
+<div class="container mx-auto px-4 mb-20">
+	<div class="max-w-3xl mx-auto text-center mb-12">
+		<h2 class="text-3xl md:text-4xl font-bold mb-6 relative inline-block">
+			<span class="relative z-10">精选作品</span>
+			<span class="absolute -bottom-2 left-0 w-full h-3 bg-yellow-200/60 -rotate-1 z-0"></span>
+		</h2>
+		<p class="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
+			精心挑选的摄影佳作，记录光影间的动人瞬间与永恒之美
+	</p>
+</div>
+	
+	<PhotoGrid images={images} />
+	
+	<!-- 查看更多按钮 -->
+	<div class="text-center mt-12">
+		<a 
+			href="/collections" 
+			class="inline-flex items-center justify-center px-6 py-3 bg-gray-800 hover:bg-gray-900 text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700"
+			aria-label="浏览全部收藏"
+		>
+			<span>浏览全部作品</span>
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+				<path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+			</svg>
+		</a>
+	</div>
+</div>

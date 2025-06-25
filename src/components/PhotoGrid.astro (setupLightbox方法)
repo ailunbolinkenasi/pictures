@@ -1,0 +1,34 @@
+setupLightbox() {
+  GLightbox({
+    selector: '.gallery-link',
+    touchNavigation: true,
+    loop: true,
+    preload: false, // 减轻加载压力
+    closeEffect: 'fade',
+    openEffect: 'fade', // 使用简单效果
+    // 适应不同尺寸的图片
+    zoomable: true,
+    draggable: true,
+    // 保持适当的间距
+    margin: [60, 0], // [垂直, 水平] 边距
+    // 容器设置
+    height: 'auto',
+    width: '100%',
+    // 图片加载回调
+    onSlideLoad: (slide, data) => {
+      // 检测图片类型并添加对应的类名
+      const slideElement = slide.slideNode;
+      const imageElement = slideElement.querySelector('.gslide-image');
+      const imgElement = imageElement?.querySelector('img');
+      
+      if (imgElement) {
+        const aspectRatio = imgElement.naturalWidth / imgElement.naturalHeight;
+        if (aspectRatio > 1.3) {
+          imageElement.classList.add('wide-image');
+        } else if (aspectRatio < 0.8) {
+          imageElement.classList.add('tall-image');
+        }
+      }
+    }
+  });
+} 

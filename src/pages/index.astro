@@ -1,0 +1,20 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import LandingHero from '../components/LandingHero-1.astro';
+import FeaturedGallery from '../components/FeaturedGallery.astro';
+import FeaturedWorkScroll from '../components/FeaturedWorkScroll.astro';
+---
+
+<MainLayout>
+	<section class="relative min-h-screen flex flex-col justify-center py-20 md:py-16 overflow-hidden">
+		<LandingHero />
+		<!-- 确保FeaturedWorkScroll在视口底部，但不与LandingHero重叠 -->
+		<div class="mt-auto">
+			<FeaturedWorkScroll />
+		</div>
+	</section>
+
+	<section id="featured-section" class="py-20">
+		<FeaturedGallery />
+	</section>
+</MainLayout>

@@ -1,0 +1,151 @@
+images:
+  # 北京图片集合
+  - path:  ZSM-V2R-QHI-06F-YCY.jpg
+    meta:
+      title: 北京风光
+      description: 北京城市景观的独特魅力
+      collections: [beijing]
+      
+  - path:  YER-ZRP-LYW-B07-C9H.jpg
+    meta:
+      title: 北京历史建筑
+      description: 古老与现代交织的北京建筑风貌
+      collections: [featured, beijing]
+      
+  - path:  YDU-PMU-6GV-MT9-6QR.jpg
+    meta:
+      title: 北京城市风光
+      description: 北京城市景观与文化元素
+      collections: [beijing]
+      
+  - path:  TT8-9GW-J3E-15I-OH3.jpg
+    meta:
+      title: 北京街景
+      description: 北京特色街道与市井生活
+      collections: [beijing]
+      
+  - path:  TRF-O66-PV4-N1M-3FX.jpg
+    meta:
+      title: 北京建筑艺术
+      description: 北京传统与现代建筑的完美结合
+      collections: [featured, beijing]
+      
+  - path:  T89-GWJ-3E1-5IO-H3Z.jpg
+    meta:
+      title: 北京夜景
+      description: 灯火辉煌的北京夜晚
+      collections: [beijing]
+      
+  - path:  RFO-66P-V4N-1M3-FXG.jpg
+    meta:
+      title: 北京文化地标
+      description: 记录北京独特的文化符号
+      collections: [beijing]
+      
+  - path:  QJ5-BBA-D3Y-3OX-X8A.jpg
+    meta:
+      title: 北京角落
+      description: 发现北京城中的隐秘角落
+      collections: [featured, beijing]
+      
+  - path:  Q0N-0QT-B21-W97-N2J.jpg
+    meta:
+      title: 北京生活
+      description: 记录北京市民的日常生活
+      collections: [beijing]
+      
+  - path:  NKS-V5K-LRY-UFQ-3HU.jpeg
+    meta:
+      title: 北京景观
+      description: 北京城市与自然景观的交融
+      collections: [beijing]
+      
+  - path:  NJW-K0P-W0X-6HS-XY4.jpg
+    meta:
+      title: 北京风情
+      description: 展现北京特有的城市风情
+      collections: [featured, beijing]
+      
+  - path:  LZS-MV2-RQH-I06-FYC.jpg
+    meta:
+      title: 北京印象
+      description: 摄影师眼中的北京印象
+      collections: [beijing]
+      
+  - path:  LQ1-KJV-OQK-1L6-5SL.jpg
+    meta:
+      title: 北京纪实
+      description: 真实记录北京的城市面貌
+      collections: [beijing]
+      
+  - path:  LH2-3PU-7D5-ROO-NRG.jpg
+    meta:
+      title: 北京瞬间
+      description: 捕捉北京城市的精彩瞬间
+      collections: [featured, beijing]
+      
+  - path:  KSV-5KL-RYU-FQ3-HUQ.jpg
+    meta:
+      title: 北京视角
+      description: 从不同视角欣赏北京之美
+      collections: [beijing]
+      
+  - path:  IYD-UPM-U6G-VMT-96Q.jpg
+    meta:
+      title: 北京之美
+      description: 展现北京城市的独特美学
+      collections: [beijing]
+      
+  - path:  GNJ-WK0-PW0-X6H-SXY.jpg
+    meta:
+      title: 北京记忆
+      description: 留存关于北京的美好记忆
+      collections: [featured, beijing]
+      
+  - path:  GLQ-1KJ-VOQ-K1L-65S.jpg
+    meta:
+      title: 北京色彩
+      description: 色彩斑斓的北京城市风貌
+      collections: [beijing]
+      
+  - path:  FXG-NJW-K0P-W0X-6HS2.jpg
+    meta:
+      title: 北京故事
+      description: 讲述北京城市背后的故事
+      collections: [beijing]
+      
+  - path:  ESW-1UG-MNL-P5A-F09.jpg
+    meta:
+      title: 北京人文
+      description: 北京深厚的人文历史与底蕴
+      collections: [featured, beijing]
+      
+  - path:  ERZ-RPL-YWB-07C-9HT.jpg
+    meta:
+      title: 北京细节
+      description: 关注北京城市的精彩细节
+      collections: [beijing]
+      
+  - path:  C7O-YTI-67M-58I-P4D.jpg
+    meta:
+      title: 北京光影
+      description: 光与影交织的北京城市景观
+      collections: [featured, beijing]
+      
+  - path:  8JM-OIZ-A5U-HJX-HKT.jpg
+    meta:
+      title: 北京建筑
+      description: 北京特色建筑与城市规划
+      collections: [beijing]
+      
+  - path:  4VE-TSC-ZB1-4M4-C8K.jpg
+    meta:
+      title: 北京传统
+      description: 传统与现代交融的北京城市风貌
+      collections: [beijing]
+      
+  - path:  4LH-23P-U7D-5RO-ONR.jpg
+    meta:
+      title: 北京全景
+      description: 北京城市的全景风光
+      collections: [featured, beijing]

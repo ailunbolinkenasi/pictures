@@ -1,0 +1,335 @@
+/* 背景覆盖层 */
+.goverlay {
+	padding: 20px;
+  }
+  
+  /* 灯箱主容器 */
+  .glightbox-container {
+	padding: 20px;
+  }
+  
+  /* 图片媒体容器 */
+  .glightbox-container .gslide-media {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+  }
+  
+  /* 图片容器 */
+  .glightbox-container .gslide-image {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+  }
+  
+  /* 图片本身 */
+  .glightbox-container .gslide-image img {
+	max-width: 80%;
+	max-height: 80%;
+	width: auto;
+	height: auto;
+	object-fit: contain;
+	display: block;
+	margin: 0;
+  }
+  
+  /* 幻灯片容器 */
+  .glightbox-container .gslide {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 90%;
+	max-height: 90%;
+	margin: 0 auto;
+  }
+  
+  /* 描述区域（文本框） */
+  .glightbox-container .gslide-description {
+	max-width: 85%;
+	background-color: white;
+	color: #333;
+	font-size: 0.875rem;
+	padding: 12px 15px;
+	border-radius: 0 0 4px 4px;
+	margin-top: 0;
+  }/* ========== 基础设置 ========== */
+:root {
+	--grid-base: 0.5rem; /* 8px网格基础单位 */
+	--transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1); /* 标准300ms缓动 */
+	--shadow-sm: 0 calc(var(--grid-base) * 0.5) calc(var(--grid-base) * 1) rgba(0, 0, 0, 0.07);
+	--shadow-md: 0 calc(var(--grid-base) * 1) calc(var(--grid-base) * 2) rgba(0, 0, 0, 0.1);
+	--shadow-lg: 0 calc(var(--grid-base) * 2) calc(var(--grid-base) * 4) rgba(0, 0, 0, 0.15);
+  }
+  
+  /* ========== 灯箱主体 ========== */
+  /* 背景覆盖层 - 平滑过渡 */
+  .goverlay {
+	padding: calc(var(--grid-base) * 2.5); /* 20px 基于8px网格 */
+	background: rgba(0, 0, 0, 0.92); /* 深色背景提升对比度 */
+	transition: all var(--transition-base);
+	backdrop-filter: blur(calc(var(--grid-base) * 0.75)); /* 轻微模糊效果 */
+  }
+  
+  /* 灯箱主容器 - 完美像素对齐 */
+  .glightbox-container {
+	padding: calc(var(--grid-base) * 2.5); /* 20px 基于8px网格 */
+	transition: all var(--transition-base);
+  }
+  
+  /* ========== 图片容器及效果 ========== */
+  /* 图片媒体容器 - 居中对齐 */
+  .glightbox-container .gslide-media {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	transition: transform var(--transition-base);
+	will-change: transform; /* 性能优化 */
+  }
+  
+  /* 图片容器 - 完美对齐 */
+  .glightbox-container .gslide-image {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	border-radius: calc(var(--grid-base) * 0.5) calc(var(--grid-base) * 0.5) 0 0;
+	box-shadow: var(--shadow-md);
+	transform: translateZ(0); /* 启用硬件加速 */
+  }
+  
+  /* 图片本身 - 清晰展示 */
+  .glightbox-container .gslide-image img {
+	max-width: 85%;
+	max-height: 85%;
+	width: auto;
+	height: auto;
+	object-fit: contain;
+	display: block;
+	margin: 0;
+	transition: transform var(--transition-base), filter var(--transition-base);
+	will-change: transform, filter;
+	transform-origin: center center;
+	filter: none; /* 默认无滤镜 */
+  }
+  
+  /* 图片加载中效果 */
+  .glightbox-container .gslide-image.loading img {
+	opacity: 0;
+	transform: scale(0.95);
+  }
+  
+  /* 图片加载完成效果 */
+  .glightbox-container .gslide-image.loaded img {
+	opacity: 1;
+	transform: scale(1);
+  }
+  
+  /* 视差滚动效果 */
+  .glightbox-container .gslide.parallax-active .gslide-media {
+	transform: translateY(calc(var(--parallax-offset, 0) * 1px)) scale(1.02);
+	transition: transform 100ms linear;
+  }
+  
+  /* 幻灯片容器 - 精确定位 */
+  .glightbox-container .gslide {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	max-width: calc(100% - var(--grid-base) * 4); /* 自适应宽度，保留边距 */
+	max-height: calc(100% - var(--grid-base) * 4); /* 自适应高度，保留边距 */
+	margin: 0 auto;
+	transition: all var(--transition-base);
+	transform: translateZ(0);
+  }
+  
+  /* ========== 文本描述区域 ========== */
+  /* 描述区域（文本框） - 精致设计 */
+  .glightbox-container .gslide-description {
+	width: 100%;
+	max-width: 85%;
+	background-color: white;
+	color: #333;
+	font-size: calc(var(--grid-base) * 1.75); /* 14px 基于8px网格 */
+	padding: calc(var(--grid-base) * 1.5) calc(var(--grid-base) * 2); /* 12px 16px 基于8px网格 */
+	border-radius: 0 0 calc(var(--grid-base) * 0.5) calc(var(--grid-base) * 0.5);
+	margin: 0 auto;
+	box-shadow: var(--shadow-sm);
+	transition: all var(--transition-base);
+	opacity: 1;
+	transform: translateY(0);
+  }
+  
+  /* 标题样式 */
+  .glightbox-container .gslide-title {
+	font-weight: 600;
+	font-size: calc(var(--grid-base) * 2); /* 16px 基于8px网格 */
+	color: #222;
+	margin-bottom: calc(var(--grid-base) * 0.5); /* 4px 基于8px网格 */
+	line-height: 1.4;
+  }
+  
+  /* 描述文本样式 */
+  .glightbox-container .gslide-desc {
+	font-size: calc(var(--grid-base) * 1.75); /* 14px 基于8px网格 */
+	color: #555;
+	line-height: 1.5;
+  }
+  
+  /* ========== 导航控制 ========== */
+  /* 导航按钮 - 触摸优化 */
+  .glightbox-container .gnext,
+  .glightbox-container .gprev {
+	width: calc(var(--grid-base) * 5); /* 40px 基于8px网格 */
+	height: calc(var(--grid-base) * 5); /* 40px 基于8px网格 */
+	background: rgba(255, 255, 255, 0.8);
+	border-radius: 50%;
+	box-shadow: var(--shadow-md);
+	transition: all var(--transition-base);
+	opacity: 0.8;
+	transform: translateZ(0);
+  }
+  
+  .glightbox-container .gnext:hover,
+  .glightbox-container .gprev:hover {
+	background: rgba(255, 255, 255, 1);
+	transform: scale(1.1);
+	box-shadow: var(--shadow-lg);
+	opacity: 1;
+  }
+  
+  /* 关闭按钮 - 触摸优化 */
+  .glightbox-clean .gclose {
+	width: calc(var(--grid-base) * 5); /* 40px 基于8px网格 */
+	height: calc(var(--grid-base) * 5); /* 40px 基于8px网格 */
+	background: rgba(255, 255, 255, 0.8);
+	border-radius: 50%;
+	box-shadow: var(--shadow-md);
+	transition: all var(--transition-base);
+	opacity: 0.8;
+	top: calc(var(--grid-base) * 2.5); /* 20px 基于8px网格 */
+	right: calc(var(--grid-base) * 2.5); /* 20px 基于8px网格 */
+  }
+  
+  .glightbox-clean .gclose:hover {
+	background: rgba(255, 255, 255, 1);
+	transform: rotate(90deg) scale(1.1);
+	opacity: 1;
+	box-shadow: var(--shadow-lg);
+  }
+  
+  /* ========== 动画效果 ========== */
+  /* 入场动画 */
+  @keyframes gFadeIn {
+	from { opacity: 0; transform: translateY(calc(var(--grid-base) * 1.25)); }
+	to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* 淡入淡出效果 */
+  .glightbox-container .gfade-in {
+	animation: gFadeIn var(--transition-base) forwards;
+  }
+  
+  /* 点击微交互 */
+  .glightbox-container .gslide.clicked .gslide-media {
+	transform: scale(0.98);
+	transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .glightbox-container .gslide.clicked .gslide-image {
+	box-shadow: var(--shadow-sm);
+  }
+  
+  /* ========== 响应式设计 ========== */
+  /* 移动端适配 (<640px) */
+  @media (max-width: 639px) {
+	.glightbox-container .gslide {
+	  max-width: 95%;
+	}
+	
+	.glightbox-container .gslide-description {
+	  padding: calc(var(--grid-base) * 1) calc(var(--grid-base) * 1.5);
+	  font-size: calc(var(--grid-base) * 1.625);
+	}
+	
+	.glightbox-container .gslide-title {
+	  font-size: calc(var(--grid-base) * 1.875);
+	}
+	
+	.glightbox-container .gnext,
+	.glightbox-container .gprev,
+	.glightbox-clean .gclose {
+	  width: calc(var(--grid-base) * 4.5);
+	  height: calc(var(--grid-base) * 4.5);
+	}
+	
+	/* 触摸优化 - 更大的点击区域 */
+	.glightbox-container .gnext::after,
+	.glightbox-container .gprev::after,
+	.glightbox-clean .gclose::after {
+	  content: '';
+	  position: absolute;
+	  top: calc(var(--grid-base) * -1);
+	  left: calc(var(--grid-base) * -1);
+	  right: calc(var(--grid-base) * -1);
+	  bottom: calc(var(--grid-base) * -1);
+	}
+  }
+  
+  /* 平板适配 (640px-1024px) */
+  @media (min-width: 640px) and (max-width: 1023px) {
+	.glightbox-container .gslide {
+	  max-width: 90%;
+	}
+	
+	/* 触摸优化 */
+	.glightbox-container .gnext,
+	.glightbox-container .gprev {
+	  width: calc(var(--grid-base) * 5.5);
+	  height: calc(var(--grid-base) * 5.5);
+	}
+  }
+  
+  /* 桌面适配 (≥1024px) */
+  @media (min-width: 1024px) {
+	/* 增加视差深度 */
+	.glightbox-container .gslide.parallax-active .gslide-media {
+	  transform: translateY(calc(var(--parallax-offset, 0) * 1.5px)) scale(1.03);
+	}
+	
+	/* 投影效果增强 */
+	.glightbox-container .gslide-image {
+	  box-shadow: var(--shadow-lg);
+	}
+  }
+  
+  /* 超宽屏适配 (≥1600px) */
+  @media (min-width: 1600px) {
+	/* 动态调整间距 */
+	.goverlay {
+	  padding: calc(var(--grid-base) * 3);
+	}
+	
+	.glightbox-container {
+	  padding: calc(var(--grid-base) * 3);
+	}
+	
+	.glightbox-container .gslide {
+	  max-width: 85%;
+	}
+	
+	/* 更大的间距和控制按钮 */
+	.glightbox-container .gnext,
+	.glightbox-container .gprev {
+	  width: calc(var(--grid-base) * 6);
+	  height: calc(var(--grid-base) * 6);
+	}
+  }
