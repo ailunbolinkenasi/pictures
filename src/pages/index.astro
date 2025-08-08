@@ -1,0 +1,335 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "~/layouts/BaseLayout.astro";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
+import "atropos/css";
+
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  "../images/*.{jpg,jpeg,png,webp}",
+);
+---
+
+<BaseLayout
+  title="我旅途中的一生."
+  description="A minimal, single-page photo gallery for Astro."
+>
+  <section class="justified-gallery" id="photoswipe">
+    {
+      Object.entries(images).map(async ([_path, image], index) => {
+        const { default: imageData } = await image();
+        return (
+          <div
+            class="atropos photo-3d"
+            style={`--width: ${imageData.width}; --height: ${imageData.height};`}
+            data-atropos
+            data-atropos-perspective="1000"
+            data-atropos-rotate-x-max="15"
+            data-atropos-rotate-y-max="15"
+            data-atropos-duration="300"
+            data-atropos-shadow-scale="1.05"
+          >
+            <!-- LDRS Ring 加载动画 -->
+            <div class="loading-ring">
+              <l-ring size="32" stroke="3" bg-opacity="0.1" speed="2" color="#666"></l-ring>
+            </div>
+            
+            <div class="atropos-scale">
+              <div class="atropos-rotate">
+                <div class="atropos-inner">
+                  <a
+                    href={imageData.src}
+                    target="_blank"
+                    data-fancybox="gallery"
+                    data-atropos-offset="5"
+                  >
+                    <Image
+                      format="webp"
+                      src={imageData}
+                      alt=""
+                      height={400}
+                      loading={index < 20 ? "eager" : "lazy"}
+                      data-atropos-offset="0"
+                      class="photo-image"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })
+    }
+  </section>
+</BaseLayout>
+
+<script>
+  import { Fancybox } from "@fancyapps/ui/dist/fancybox/";
+  import Atropos from "atropos";
+  import { ring } from "ldrs";
+
+  // 注册 LDRS Ring 动画
+  ring.register();
+
+  // 初始化 Fancybox
+  Fancybox.bind("[data-fancybox]", {
+    theme: "auto",
+    mainStyle: {
+      "--f-button-width": "44px",
+      "--f-button-height": "44px",
+      "--f-button-border-radius": "50%",
+      "--f-toolbar-padding": "16px",
+      "--f-content-border-radius": "8px",
+    },
+    Carousel: {
+      Arrows: false,
+      Toolbar: {
+        display: {
+          left: [],
+          middle: [],
+          right: ["close"],
+        },
+      },
+      transition: "slide",
+    },
+  });
+
+  // 初始化 Atropos 3D 效果和图片加载处理
+  document.addEventListener("DOMContentLoaded", () => {
+    const atroposElements = document.querySelectorAll(".atropos");
+    
+    atroposElements.forEach((element) => {
+      const htmlElement = element as HTMLElement;
+      const loadingRing = htmlElement.querySelector('.loading-ring') as HTMLElement;
+      const photoImage = htmlElement.querySelector('.photo-image') as HTMLImageElement;
+      
+      // 初始化 Atropos
+      new (Atropos as any)({
+        el: htmlElement,
+        activeOffset: 40,
+        shadowScale: 1.05,
+        onEnter() {
+          htmlElement.style.zIndex = "10";
+        },
+        onLeave() {
+          htmlElement.style.zIndex = "1";
+        },
+      });
+      
+      // 处理图片加载
+      if (photoImage && loadingRing) {
+        photoImage.addEventListener('load', () => {
+          loadingRing.style.opacity = '0';
+          photoImage.style.opacity = '1';
+          
+          setTimeout(() => {
+            loadingRing.style.display = 'none';
+          }, 300);
+        });
+        
+        // 如果图片已经加载完成
+        if (photoImage.complete) {
+          loadingRing.style.opacity = '0';
+          photoImage.style.opacity = '1';
+          loadingRing.style.display = 'none';
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  /* 页面进入动画 */
+  @keyframes pageEnter {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* 图片加载动画 */
+  @keyframes imageLoad {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* 图片骨架屏动画 */
+  @keyframes shimmer {
+    0% {
+      background-position: -200px 0;
+    }
+    100% {
+      background-position: calc(200px + 100%) 0;
+    }
+  }
+
+  .justified-gallery {
+    /* Mobile First Defaults */
+    --padding: 12px;
+    --space: 12px;
+    --min-height: 180px;
+
+    padding: var(--padding);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space);
+    
+    /* 页面进入动画 */
+    animation: pageEnter 0.8s ease-out;
+  }
+
+  /* Tablet */
+  @media (min-width: 768px) {
+    .justified-gallery {
+      --padding: 24px;
+      --space: 24px;
+      --min-height: 250px;
+    }
+  }
+
+  /* Desktop */
+  @media (min-width: 1024px) {
+    .justified-gallery {
+      --min-height: 300px;
+    }
+  }
+
+  /* Large Desktop */
+  @media (min-width: 1440px) {
+    .justified-gallery {
+      --padding: 32px;
+      --space: 32px;
+      --min-height: 350px;
+    }
+  }
+
+  /* 3D 容器样式 */
+  .justified-gallery .photo-3d {
+    flex-grow: calc(var(--width) * (100000 / var(--height)));
+    flex-basis: calc(var(--min-height) * (var(--width) / var(--height)));
+    aspect-ratio: var(--width) / var(--height);
+    border-radius: 8px;
+    animation: imageLoad 0.6s ease-out;
+    position: relative;
+    z-index: 1;
+    transition: z-index 0.3s ease;
+  }
+
+  .justified-gallery .photo-3d a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .justified-gallery .photo-3d a img {
+    display: block;
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+    transition: transform 0.3s ease;
+    border-radius: 8px;
+  }
+
+  /* LDRS Ring 加载动画样式 */
+  .justified-gallery .loading-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  /* 图片初始状态 */
+  .justified-gallery .photo-image {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  /* 3D 悬停效果增强 */
+  .justified-gallery .photo-3d:hover a img {
+    transform: scale(1.02);
+  }
+
+  /* Atropos 自定义样式 */
+  .justified-gallery .atropos {
+    border-radius: 8px;
+  }
+
+  .justified-gallery .atropos-inner {
+    border-radius: 8px;
+  }
+
+  /* 移动端优化 - 减少 3D 效果强度 */
+  @media (max-width: 768px) {
+    .justified-gallery .photo-3d[data-atropos] {
+      --atropos-rotate-x-max: 8;
+      --atropos-rotate-y-max: 8;
+    }
+    
+    /* 移动端 Ring 动画尺寸调整 */
+    .justified-gallery .loading-ring l-ring {
+      --size: 24px;
+    }
+  }
+
+  /* 暗色主题下的 Ring 动画 */
+  @media (prefers-color-scheme: dark) {
+    .justified-gallery .loading-ring l-ring {
+      --color: #ccc;
+    }
+  }
+
+  .justified-gallery a:focus-visible {
+    outline: 3px solid var(--outline);
+    outline-offset: 2px;
+    transform: scale(1.05);
+    z-index: 1;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .justified-gallery a.hidden {
+    transition: opacity 0.4s ease-in-out;
+    opacity: 0;
+  }
+
+  .justified-gallery::after {
+    content: " ";
+    flex-grow: 1000000000;
+  }
+
+  /* Fancybox 弹出框圆角样式 */
+  :global(.fancybox__content) {
+    border-radius: 8px !important;
+    overflow: hidden;
+  }
+
+  :global(.fancybox__slide img) {
+    border-radius: 8px;
+    transition: transform 0.3s ease, border-radius 0.3s ease;
+  }
+
+  /* 确保在不同缩放状态下保持圆角 */
+  :global(.fancybox__slide.is-selected img) {
+    border-radius: 8px;
+  }
+
+  /* 兼容性增强 */
+  :global(.fancybox__content > *) {
+    border-radius: 8px;
+  }
+</style>

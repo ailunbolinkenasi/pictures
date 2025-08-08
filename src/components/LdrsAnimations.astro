@@ -1,0 +1,195 @@
+---
+// LDRS 动画组件 - 展示多种动画效果
+---
+
+<div class="ldrs-showcase">
+  <!-- 页面加载动画 -->
+  <div class="loading-section">
+    <h3>页面加载动画</h3>
+    <div class="animation-grid">
+      <!-- Ring 动画 (主要使用) -->
+      <div class="animation-item">
+        <l-ring size="40" stroke="5" bg-opacity="0" speed="2" color="currentColor"></l-ring>
+        <span>Ring</span>
+      </div>
+      
+      <!-- Dot Pulse 动画 -->
+      <div class="animation-item">
+        <l-dot-pulse size="43" speed="1.3" color="currentColor"></l-dot-pulse>
+        <span>Dot Pulse</span>
+      </div>
+      
+      <!-- Bouncy 动画 -->
+      <div class="animation-item">
+        <l-bouncy size="45" speed="1.75" color="currentColor"></l-bouncy>
+        <span>Bouncy</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 内容加载动画 -->
+  <div class="loading-section">
+    <h3>内容加载动画</h3>
+    <div class="animation-grid">
+      <!-- Spiral 动画 -->
+      <div class="animation-item">
+        <l-spiral size="40" speed="0.9" color="currentColor"></l-spiral>
+        <span>Spiral</span>
+      </div>
+      
+      <!-- Orbit 动画 -->
+      <div class="animation-item">
+        <l-orbit size="35" speed="1.5" color="currentColor"></l-orbit>
+        <span>Orbit</span>
+      </div>
+      
+      <!-- Quantum 动画 -->
+      <div class="animation-item">
+        <l-quantum size="45" speed="1.75" color="currentColor"></l-quantum>
+        <span>Quantum</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 过渡效果动画 -->
+  <div class="loading-section">
+    <h3>过渡效果动画</h3>
+    <div class="animation-grid">
+      <!-- Helix 动画 -->
+      <div class="animation-item">
+        <l-helix size="45" speed="2.5" color="currentColor"></l-helix>
+        <span>Helix</span>
+      </div>
+      
+      <!-- Mirage 动画 -->
+      <div class="animation-item">
+        <l-mirage size="60" speed="2.5" color="currentColor"></l-mirage>
+        <span>Mirage</span>
+      </div>
+      
+      <!-- Pulsar 动画 -->
+      <div class="animation-item">
+        <l-pulsar size="40" speed="1.75" color="currentColor"></l-pulsar>
+        <span>Pulsar</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 导入 LDRS 动画组件
+  import { 
+    ring, 
+    dotPulse, 
+    bouncy, 
+    spiral, 
+    orbit, 
+    quantum, 
+    helix, 
+    mirage, 
+    pulsar 
+  } from 'ldrs';
+
+  // 注册所有动画组件
+  ring.register();
+  dotPulse.register();
+  bouncy.register();
+  spiral.register();
+  orbit.register();
+  quantum.register();
+  helix.register();
+  mirage.register();
+  pulsar.register();
+</script>
+
+<style>
+  .ldrs-showcase {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .loading-section {
+    margin-bottom: 3rem;
+  }
+
+  .loading-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary, #333);
+    font-weight: 600;
+  }
+
+  .animation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+  }
+
+  .animation-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--bg-secondary, #f8f9fa);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color, #e1e5e9);
+  }
+
+  .animation-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .animation-item span {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary, #666);
+    text-align: center;
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .ldrs-showcase {
+      padding: 1rem;
+    }
+    
+    .animation-grid {
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+    }
+    
+    .animation-item {
+      padding: 1rem;
+    }
+    
+    .loading-section h3 {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .animation-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* 暗色主题支持 */
+  @media (prefers-color-scheme: dark) {
+    .loading-section h3 {
+      color: var(--text-primary-dark, #fff);
+    }
+    
+    .animation-item {
+      background: var(--bg-secondary-dark, #2a2a2a);
+      border-color: var(--border-color-dark, #404040);
+    }
+    
+    .animation-item span {
+      color: var(--text-secondary-dark, #ccc);
+    }
+  }
+</style>
