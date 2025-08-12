@@ -19,7 +19,7 @@
     "@astrojs/check": "^0.9.4",
     "@astrojs/sitemap": "^3.4.1",
     "@fancyapps/ui": "^6.0.17",
-    "astro": "^5.12.3",
+    "astro": "^5.12.9",
     "atropos": "^2.0.2",
     "ldrs": "^1.1.7",
     "smartypants": "^0.2.2",
