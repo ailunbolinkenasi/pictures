@@ -13,14 +13,13 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
   title="我旅途中的一生."
   description="A minimal, single-page photo gallery for Astro."
 >
-  <section class="justified-gallery" id="photoswipe">
+  <section class="masonry-gallery" id="photoswipe">
     {
       Object.entries(images).map(async ([_path, image], index) => {
         const { default: imageData } = await image();
         return (
           <div
-            class="atropos photo-3d"
-            style={`--width: ${imageData.width}; --height: ${imageData.height};`}
+            class="masonry-item atropos photo-3d"
             data-atropos
             data-atropos-perspective="1000"
             data-atropos-rotate-x-max="15"
@@ -46,8 +45,11 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
                       format="webp"
                       src={imageData}
                       alt=""
-                      height={400}
-                      loading={index < 20 ? "eager" : "lazy"}
+                      widths={[320, 480, 640, 800, 1024, 1280]}
+                      sizes="(max-width: 600px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      loading={index < 8 ? "eager" : "lazy"}
+                      decoding="async"
+                      fetchpriority={index < 4 ? "high" : "auto"}
                       data-atropos-offset="0"
                       class="photo-image"
                     />
@@ -96,24 +98,27 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
   // 初始化 Atropos 3D 效果和图片加载处理
   document.addEventListener("DOMContentLoaded", () => {
     const atroposElements = document.querySelectorAll(".atropos");
+    const isCoarse = matchMedia("(pointer: coarse)").matches || window.innerWidth < 768;
     
     atroposElements.forEach((element) => {
       const htmlElement = element as HTMLElement;
       const loadingRing = htmlElement.querySelector('.loading-ring') as HTMLElement;
       const photoImage = htmlElement.querySelector('.photo-image') as HTMLImageElement;
       
-      // 初始化 Atropos
-      new (Atropos as any)({
-        el: htmlElement,
-        activeOffset: 40,
-        shadowScale: 1.05,
-        onEnter() {
-          htmlElement.style.zIndex = "10";
-        },
-        onLeave() {
-          htmlElement.style.zIndex = "1";
-        },
-      });
+      // 初始化 Atropos（非移动端）
+      if (!isCoarse) {
+        new (Atropos as any)({
+          el: htmlElement,
+          activeOffset: 40,
+          shadowScale: 1.05,
+          onEnter() {
+            htmlElement.style.zIndex = "10";
+          },
+          onLeave() {
+            htmlElement.style.zIndex = "1";
+          },
+        });
+      }
       
       // 处理图片加载
       if (photoImage && loadingRing) {
@@ -172,145 +177,22 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
     }
   }
 
-  .justified-gallery {
-    /* Mobile First Defaults */
-    --padding: 12px;
-    --space: 12px;
-    --min-height: 180px;
 
-    padding: var(--padding);
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space);
-    
-    /* 页面进入动画 */
-    animation: pageEnter 0.8s ease-out;
-  }
 
-  /* Tablet */
-  @media (min-width: 768px) {
-    .justified-gallery {
-      --padding: 24px;
-      --space: 24px;
-      --min-height: 250px;
-    }
-  }
 
-  /* Desktop */
-  @media (min-width: 1024px) {
-    .justified-gallery {
-      --min-height: 300px;
-    }
-  }
 
-  /* Large Desktop */
-  @media (min-width: 1440px) {
-    .justified-gallery {
-      --padding: 32px;
-      --space: 32px;
-      --min-height: 350px;
-    }
-  }
 
-  /* 3D 容器样式 */
-  .justified-gallery .photo-3d {
-    flex-grow: calc(var(--width) * (100000 / var(--height)));
-    flex-basis: calc(var(--min-height) * (var(--width) / var(--height)));
-    aspect-ratio: var(--width) / var(--height);
-    border-radius: 8px;
-    animation: imageLoad 0.6s ease-out;
-    position: relative;
-    z-index: 1;
-    transition: z-index 0.3s ease;
-  }
 
-  .justified-gallery .photo-3d a {
-    display: block;
-    width: 100%;
-    height: 100%;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: all 0.3s ease-in-out;
-  }
 
-  .justified-gallery .photo-3d a img {
-    display: block;
-    object-fit: cover;
-    height: 100%;
-    width: 100%;
-    transition: transform 0.3s ease;
-    border-radius: 8px;
-  }
 
-  /* LDRS Ring 加载动画样式 */
-  .justified-gallery .loading-ring {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 10;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
 
-  /* 图片初始状态 */
-  .justified-gallery .photo-image {
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
 
-  /* 3D 悬停效果增强 */
-  .justified-gallery .photo-3d:hover a img {
-    transform: scale(1.02);
-  }
 
-  /* Atropos 自定义样式 */
-  .justified-gallery .atropos {
-    border-radius: 8px;
-  }
 
-  .justified-gallery .atropos-inner {
-    border-radius: 8px;
-  }
 
-  /* 移动端优化 - 减少 3D 效果强度 */
-  @media (max-width: 768px) {
-    .justified-gallery .photo-3d[data-atropos] {
-      --atropos-rotate-x-max: 8;
-      --atropos-rotate-y-max: 8;
-    }
-    
-    /* 移动端 Ring 动画尺寸调整 */
-    .justified-gallery .loading-ring l-ring {
-      --size: 24px;
-    }
-  }
 
-  /* 暗色主题下的 Ring 动画 */
-  @media (prefers-color-scheme: dark) {
-    .justified-gallery .loading-ring l-ring {
-      --color: #ccc;
-    }
-  }
 
-  .justified-gallery a:focus-visible {
-    outline: 3px solid var(--outline);
-    outline-offset: 2px;
-    transform: scale(1.05);
-    z-index: 1;
-    border-radius: 2px;
-    box-shadow: 0 2px 4px 2px rgba(0, 0, 0, 0.1);
-  }
 
-  .justified-gallery a.hidden {
-    transition: opacity 0.4s ease-in-out;
-    opacity: 0;
-  }
-
-  .justified-gallery::after {
-    content: " ";
-    flex-grow: 1000000000;
-  }
 
   /* Fancybox 弹出框圆角样式 */
   :global(.fancybox__content) {
@@ -331,5 +213,130 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
   /* 兼容性增强 */
   :global(.fancybox__content > *) {
     border-radius: 8px;
+  }
+  /* Masonry 布局（纯 CSS，多列，性能优） */
+  .masonry-gallery {
+    --gap: 12px;
+    padding: var(--gap);
+    column-gap: var(--gap);
+    column-width: 280px;
+    animation: pageEnter 0.8s ease-out;
+  }
+
+  @media (min-width: 768px) {
+    .masonry-gallery {
+      --gap: 16px;
+      column-width: 340px;
+      padding: var(--gap);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .masonry-gallery {
+      --gap: 20px;
+      column-width: 380px;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .masonry-gallery {
+      --gap: 24px;
+      column-width: 440px;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .masonry-gallery {
+      --gap: 28px;
+      column-width: 500px;
+    }
+  }
+
+  /* 每个卡片避免在列中被拆分，兼容前缀 */
+  .masonry-item {
+    display: inline-block;
+    width: 100%;
+    margin: 0 0 var(--gap);
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    -moz-column-break-inside: avoid;
+    page-break-inside: avoid;
+    position: relative;
+    z-index: 1;
+    transition: z-index 0.3s ease;
+    content-visibility: auto;
+    contain: layout style paint;
+  }
+
+  .masonry-item a {
+    display: block;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .masonry-item a img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+  }
+
+  /* LDRS Ring 加载动画样式（masonry 命名空间） */
+  .masonry-gallery .loading-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  /* 图片初始与加载后状态 */
+  .masonry-gallery .photo-image {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .masonry-gallery .photo-3d:hover a img {
+    transform: scale(1.02);
+  }
+
+  /* Atropos 圆角统一 */
+  .masonry-gallery .atropos,
+  .masonry-gallery .atropos-inner {
+    border-radius: 8px;
+  }
+
+  /* 可访问性与聚焦态 */
+  .masonry-gallery a:focus-visible {
+    outline: 3px solid var(--outline);
+    outline-offset: 2px;
+    transform: scale(1.03);
+    z-index: 2;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  /* 移动端降低 3D 强度与 Ring 尺寸 */
+  @media (max-width: 768px) {
+    .masonry-gallery .photo-3d[data-atropos] {
+      --atropos-rotate-x-max: 8;
+      --atropos-rotate-y-max: 8;
+    }
+    .masonry-gallery .loading-ring l-ring {
+      --size: 24px;
+    }
+  }
+
+  /* 暗色主题下的 Ring 颜色 */
+  @media (prefers-color-scheme: dark) {
+    .masonry-gallery .loading-ring l-ring {
+      --color: #ccc;
+    }
   }
 </style>
