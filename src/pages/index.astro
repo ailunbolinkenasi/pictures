@@ -40,6 +40,7 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
                     target="_blank"
                     data-fancybox="gallery"
                     data-atropos-offset="5"
+                    style={`aspect-ratio: ${imageData.width} / ${imageData.height};`}
                   >
                     <Image
                       format="webp"
@@ -65,7 +66,7 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
 </BaseLayout>
 
 <script>
-  import { Fancybox } from "@fancyapps/ui/dist/fancybox/";
+  import { Fancybox } from "@fancyapps/ui";
   import Atropos from "atropos";
   import { ring } from "ldrs";
 
@@ -73,7 +74,7 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
   ring.register();
 
   // 初始化 Fancybox
-  Fancybox.bind("[data-fancybox]", {
+  const fbOptions: any = {
     theme: "auto",
     mainStyle: {
       "--f-button-width": "44px",
@@ -82,6 +83,7 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
       "--f-toolbar-padding": "16px",
       "--f-content-border-radius": "8px",
     },
+    Images: { zoom: false },
     Carousel: {
       Arrows: false,
       Toolbar: {
@@ -91,9 +93,11 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
           right: ["close"],
         },
       },
-      transition: "slide",
+      transition: "fade",
+      preload: 2,
     },
-  });
+  };
+  Fancybox.bind("[data-fancybox]", fbOptions);
 
   // 初始化 Atropos 3D 效果和图片加载处理
   document.addEventListener("DOMContentLoaded", () => {
@@ -274,15 +278,18 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
     border-radius: 8px;
     overflow: hidden;
     transition: transform 0.3s ease-in-out;
+    will-change: transform;
   }
 
   .masonry-item a img {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
     object-fit: cover;
     border-radius: 8px;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, opacity 0.2s ease;
+    will-change: transform, opacity;
+    transform: translateZ(0);
   }
 
   /* LDRS Ring 加载动画样式（masonry 命名空间） */
