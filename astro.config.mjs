@@ -1,17 +1,23 @@
-import sitemap from "@astrojs/sitemap";
 import { defineConfig } from "astro/config";
+import { FontaineTransform } from "fontaine";
 
+const site = process.env.VERCEL
+  ? process.env.VERCEL_ENV === "production"
+    ? "https://astro-multiverse.vercel.app"
+    : `https://${process.env.VERCEL_URL}`
+  : (process.env.SITE ?? "http://localhost:4321");
+const base = process.env.BASE || "/";
+
+// https://astro.build/config
 export default defineConfig({
-  site: "https://pic.mletter.cn",
-  devToolbar: {
-    enabled: false,
-  },
-  title: "iren的摄影日记📹",  
-  integrations: [sitemap()],
-  prefetch: true,
+  site,
+  base,
   vite: {
-    ssr: {
-      noExternal: ["smartypants"],
-    },
+    plugins: [
+      FontaineTransform.vite({
+        fallbacks: ["Arial"],
+        resolvePath: (id) => new URL(`./public${id}`, import.meta.url),
+      }),
+    ],
   },
 });
