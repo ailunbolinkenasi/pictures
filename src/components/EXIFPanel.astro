@@ -1,0 +1,289 @@
+---
+// src/components/EXIFPanel.astro
+import { formatEXIF, readEXIF } from "../lib/exif";
+
+export interface Props {
+  imageUrl: string;
+  // 注意：Astro 组件 props 仅在构建/渲染时有效，客户端交互无法直接使用 props 中的 boolean 变量控制显隐
+  // 这里我们假设组件被挂载到了 DOM 上，默认可能是隐藏的，或者通过 CSS 控制
+  className?: string;
+}
+
+const { imageUrl, className = "" } = Astro.props;
+
+let exifData: string[] = [];
+let hasError = false;
+
+// 服务端异步加载 EXIF 数据
+if (imageUrl) {
+  try {
+    const exif = await readEXIF(imageUrl);
+    if (exif) {
+      exifData = formatEXIF(exif);
+    }
+  } catch (error) {
+    console.warn("加载 EXIF 数据失败:", error);
+    hasError = true;
+  }
+}
+
+// 如果没有数据且不是 loading 状态（Astro 服务端渲染完即非 loading）
+const showEmpty = exifData.length === 0;
+---
+
+<!-- 
+  我们给最外层加一个 ID 或特定 Class 以便 JS 控制 
+  注意：on:click 在 Astro 中无效，必须用原生 JS 在 script 标签中绑定
+-->
+<div class:list={["exif-overlay", className]} id="exif-panel-overlay">
+  <div class="exif-container" id="exif-panel-container">
+    <div class="exif-header">
+      <h3>照片信息</h3>
+      <!-- 使用 data-action 标记按钮 -->
+      <button class="exif-close-btn" data-action="close-exif" aria-label="关闭">
+        ✕
+      </button>
+    </div>
+    
+    <div class="exif-content">
+      {/* Astro 使用 JSX 语法，而不是 {#if} */}
+      
+      {exifData.length > 0 ? (
+        <div class="exif-list">
+          {exifData.map((item) => (
+            <div class="exif-item">{item}</div>
+          ))}
+        </div>
+      ) : (
+        <div class="exif-empty">
+          <p>📷 没有找到照片的 EXIF 信息</p>
+          <p class="exif-hint">
+            这张照片可能没有包含相机、镜头或拍摄参数等元数据。
+            大多数手机拍摄的照片和网络下载的图片会缺少这些信息。
+          </p>
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+
+<script>
+  // 客户端脚本：处理关闭逻辑
+  const overlay = document.getElementById('exif-panel-overlay');
+  const container = document.getElementById('exif-panel-container');
+  const closeBtns = document.querySelectorAll('[data-action="close-exif"]');
+
+  function closePanel() {
+    if (overlay) overlay.style.display = 'none';
+    // 这里你可以触发一个自定义事件告诉父级组件
+    const event = new CustomEvent('exif-closed');
+    window.dispatchEvent(event);
+  }
+
+  // 点击遮罩层关闭
+  overlay?.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      closePanel();
+    }
+  });
+
+  // 阻止容器冒泡
+  container?.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+
+  // 绑定关闭按钮
+  closeBtns.forEach(btn => {
+    btn.addEventListener('click', closePanel);
+  });
+</script>
+
+<style>
+  /* 保持原有的 CSS 不变，但建议加上 hidden 类的控制 */
+  .exif-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10000;
+    display: flex; /* 默认显示，如果需要默认隐藏请改为 none */
+    align-items: center;
+    justify-content: flex-end;
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  /* 如果需要在父组件控制显隐，可以在这里加 .hidden 类 */
+  .exif-overlay.hidden {
+    display: none;
+  }
+
+  /* ... 其余 CSS 保持你原来的代码 ... */
+  .exif-container {
+    width: 350px;
+    max-width: 80vw;
+    height: 100vh;
+    background: var(--bg, #ffffff);
+    color: var(--text, #333333);
+    display: flex;
+    flex-direction: column;
+    animation: slideInFromRight 0.3s ease-out;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .exif-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border, #e1e5e9);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .exif-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .exif-close-btn {
+    background: none;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--text, #333333);
+    transition: all 0.2s ease;
+    margin-left: auto;
+  }
+
+  .exif-close-btn:hover {
+    background: var(--hover, #f1f3f4);
+  }
+
+  .exif-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 20px;
+  }
+
+  .exif-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .exif-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border, #f1f3f4);
+    font-size: 14px;
+    line-height: 1.5;
+    transition: all 0.2s ease;
+  }
+
+  .exif-item:last-child {
+    border-bottom: none;
+  }
+
+  .exif-item:hover {
+    background: var(--hover, #f8f9fa);
+    border-radius: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .exif-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    text-align: center;
+    color: var(--text, #666666);
+  }
+
+  .exif-empty p:first-child {
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+
+  .exif-hint {
+    font-size: 12px;
+    line-height: 1.4;
+    max-width: 250px;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideInFromRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+
+  /* 暗色模式支持 */
+  @media (prefers-color-scheme: dark) {
+    .exif-container {
+      background: var(--bg, #1a1a1a);
+      color: var(--text, #ffffff);
+    }
+    
+    .exif-header {
+      border-bottom-color: var(--border, #383838);
+    }
+    
+    .exif-close-btn:hover {
+      background: var(--hover, #333333);
+    }
+    
+    .exif-item {
+      border-bottom-color: var(--border, #383838);
+    }
+    
+    .exif-item:hover {
+      background: var(--hover, #2d2d2d);
+    }
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .exif-container {
+      width: 300px;
+      max-width: 70vw;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .exif-container {
+      width: 280px;
+      max-width: 60vw;
+    }
+    
+    .exif-header {
+      padding: 16px;
+    }
+    
+    .exif-content {
+      padding: 0 16px;
+    }
+  }
+
+  /* 减少动画偏好支持 */
+  @media (prefers-reduced-motion: reduce) {
+    .exif-overlay,
+    .exif-container,
+    .exif-close-btn,
+    .exif-item {
+      transition: none;
+      animation: none;
+    }
+  }
+</style>

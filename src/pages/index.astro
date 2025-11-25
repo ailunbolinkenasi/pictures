@@ -1,30 +1,407 @@
 ---
-import BaseHead from "@/components/BaseHead.astro";
-import ExternalScripts from "@/components/ExternalScripts.astro";
-import Footer from "@/components/Footer.astro";
-import Gallery from "@/components/Gallery.astro";
-import Header from "@/components/Header.astro";
+import { Image } from "astro:assets";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
-let title = "irende摄影作品展示";
-let description =
-  "欢迎来到irende摄影作品展示，这是一个简约单页设计的精美图库，配备了功能完善的光箱展示效果。";
+import fs from "node:fs";
+import { fileURLToPath } from "node:url";
+import ExifParser from "exif-parser";
+
+// 1. 定义 SVG 图标
+const ICONS = {
+  camera: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>`,
+  lens: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="14.31" y1="8" x2="20.05" y2="17.94"/><line x1="9.69" y1="8" x2="21.17" y2="8"/><line x1="7.38" y1="12" x2="13.12" y2="2.06"/><line x1="9.69" y1="16" x2="3.95" y2="6.06"/><line x1="14.31" y1="16" x2="2.83" y2="16"/><line x1="16.62" y1="12" x2="10.88" y2="21.94"/></svg>`,
+  aperture: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M22 12h-4"/><path d="M6 12H2"/><path d="M12 6V2"/><path d="M12 18v4"/></svg>`,
+  shutter: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M22 12h-4"/><path d="M6 12H2"/><path d="M12 6V2"/><path d="M12 18v4"/></svg>`,
+  iso: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 12h.01"/><path d="M12 12h.01"/><path d="M17 12h.01"/></svg>`,
+};
+
+// 2. 获取图片
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  "../images/*.{jpg,jpeg,png,webp}",
+);
+
+function formatShutterSpeed(time: number | undefined) {
+  if (!time) return "";
+  if (time >= 1) return `${time}s`;
+  const fraction = Math.round(1 / time);
+  return `1/${fraction}s`;
+}
+
+// 3. 数据预处理
+const imageEntries = await Promise.all(
+  Object.entries(images).map(async ([relativePath, image]) => {
+    try {
+      const { default: imageData } = await image();
+      const filename = relativePath.split("/").pop()?.split(".")[0] || "";
+      const altText = filename
+        .replace(/[-_]/g, " ")
+        .replace(/^\w/, (c) => c.toUpperCase());
+
+      let captionHtml = "";
+
+      try {
+        const absolutePath = fileURLToPath(
+          new URL(relativePath, import.meta.url),
+        );
+        if (fs.existsSync(absolutePath)) {
+          const buffer = fs.readFileSync(absolutePath);
+          const parser = ExifParser.create(buffer);
+          const result = parser.parse();
+
+          if (result.tags) {
+            const {
+              Model,
+              LensModel,
+              FNumber,
+              ExposureTime,
+              ISO,
+              FocalLength,
+              FocalLengthIn35mmFormat,
+            } = result.tags;
+
+            const items: string[] = [];
+
+            if (Model)
+              items.push(
+                `<span class="exif-tag" title="Camera">${ICONS.camera} ${Model}</span>`,
+              );
+
+            if (LensModel) {
+              items.push(
+                `<span class="exif-tag" title="Lens Model">${ICONS.lens} ${LensModel}</span>`,
+              );
+            }
+
+            // 优先使用 35mm 等效焦距
+            const displayFocalLength = FocalLengthIn35mmFormat || FocalLength;
+            if (displayFocalLength) {
+              items.push(
+                `<span class="exif-tag" title="Focal Length">${ICONS.lens} ${displayFocalLength}mm</span>`,
+              );
+            }
+
+            if (FNumber)
+              items.push(
+                `<span class="exif-tag" title="Aperture">${ICONS.aperture} f/${FNumber}</span>`,
+              );
+
+            if (ExposureTime)
+              items.push(
+                `<span class="exif-tag" title="Shutter Speed">${ICONS.shutter} ${formatShutterSpeed(ExposureTime)}</span>`,
+              );
+
+            if (ISO)
+              items.push(
+                `<span class="exif-tag" title="ISO">${ICONS.iso} ${ISO}</span>`,
+              );
+
+            if (items.length > 0) {
+              captionHtml = `<div class="exif-info">${items.join("")}</div>`;
+            }
+          }
+        }
+      } catch (exifErr) {
+        // 静默失败
+      }
+
+      const captionText =
+        captionHtml || `<div class="exif-filename">${filename}</div>`;
+      return { imageData, altText, captionText, filename };
+    } catch (e) {
+      return null;
+    }
+  }),
+).then((results) =>
+  results.filter((item): item is NonNullable<typeof item> => item !== null),
+);
 ---
 
-<!doctype html>
-<html lang="en">
-  <BaseHead
-    title={title}
-    description={description}
-    author={'AREA44'}
-    og={'og-image.jpg'}
-  />
-
-  <body class="is-preload">
-    <div id="wrapper">
-      <Header title={title} />
-      <Footer title={title} description={description} />
-      <Gallery />
+<BaseLayout
+  title="Photo Gallery"
+  description="Masonry style gallery"
+>
+  <section class="masonry-container">
+    <div class="masonry-grid" id="gallery-grid">
+      {
+        imageEntries.map(({ imageData, altText, captionText }, index) => (
+          <div class="masonry-item">
+              <a
+                href={imageData.src}
+                class="gallery-link"
+                data-fancybox="gallery"
+                data-caption={captionText}
+                aria-label={`View ${altText}`}
+                data-width={imageData.width}
+                data-height={imageData.height}
+              >
+              <Image
+                src={imageData}
+                alt={altText}
+                width={600} 
+                decoding="async" 
+                format="webp"
+                quality={80}
+                loading={index < 6 ? "eager" : "lazy"} 
+                fetchpriority={index < 2 ? "high" : "auto"}
+                class="gallery-img"
+              />
+              <div class="overlay">
+                <span class="title">{altText}</span>
+              </div>
+            </a>
+          </div>
+        ))
+      }
     </div>
-    <ExternalScripts />
-  </body>
-</html>
+  </section>
+</BaseLayout>
+
+<style is:global>
+  :root {
+    --f-bg: #ffffff;
+    --f-button-color: #333;
+    --f-button-hover-color: #000;
+  }
+
+  /* Fancybox 背景 */
+  .fancybox__backdrop {
+    background: rgba(255, 255, 255, 0.98) !important;
+    will-change: opacity;
+  }
+
+  /* Fancybox 布局 */
+  .fancybox__slide {
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* 内容层 GPU 加速 */
+  .fancybox__content {
+    transform: translate3d(0, 0, 0); 
+    will-change: transform, opacity; 
+    backface-visibility: hidden;
+  }
+
+  /* 图片阴影和圆角 */
+  .fancybox__content img, img.f-panzoom__content {
+    border-radius: 8px !important; 
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15) !important;
+  }
+
+  @media (min-width: 1024px) {
+    .fancybox__content { margin: 60px; }
+  }
+
+  /* EXIF 信息栏布局 */
+  .fancybox__caption .exif-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    padding-top: 15px;
+  }
+
+  .exif-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.85rem;
+    color: #555;
+    background: rgba(0,0,0,0.04);
+    padding: 6px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .exif-tag:hover {
+    background: rgba(0,0,0,0.08);
+    color: #000;
+  }
+
+  .exif-tag svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+
+  .exif-filename {
+    font-size: 1rem;
+    color: #888;
+    font-style: italic;
+  }
+
+  .fancybox__caption {
+    color: #333;
+    padding-bottom: 20px;
+  }
+</style>
+
+
+
+
+<script>
+  import { Fancybox } from "@fancyapps/ui";
+
+  (Fancybox as any).bind('[data-fancybox="gallery"]', {
+    // 保持预加载，保证大图切换流畅
+    preload: 3, 
+    Thumbs: { autoStart: false },
+    Toolbar: {
+      display: { right: ["close"] },
+    },
+    Images: { 
+      fit: "contain",
+      zoom: true,
+      Panzoom: { maxScale: 2 }
+    },
+    Carousel: {
+      transition: "slide",
+      friction: 0.88,
+    },
+    dragToClose: true,
+    animated: true,
+    showClass: "f-zoomInUp",
+    hideClass: "f-fadeOut",
+  });
+
+  // --- 修复后的滚动动画逻辑 ---
+  document.addEventListener('DOMContentLoaded', () => {
+    const items = document.querySelectorAll('.masonry-item');
+    
+    // 使用更稳健的观察器配置
+    const observer = new IntersectionObserver((entries) => {
+      // 这里的 entries 是当前“这一批”进入屏幕的元素
+      // 我们可以根据它们在 entries 数组里的顺序来设置延迟，而不是它们在 DOM 里的全局索引
+      // 这样无论滚多快，显示顺序都是整齐的
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          const target = entry.target as HTMLElement;
+          
+          // 动态设置延迟：每批进入的元素依次延迟 80ms
+          // 这样既有瀑布流的错落感，又不会因为全局 index 导致乱跳
+          target.style.transitionDelay = `${i * 80}ms`;
+          
+          // 强制触发重绘，确保 transition 生效
+          requestAnimationFrame(() => {
+            target.classList.add('visible');
+          });
+          
+          observer.unobserve(target);
+        }
+      });
+    }, { 
+      threshold: 0.1, 
+      // 恢复正常的 rootMargin，不要提前太多加载，确保用户看到动画过程
+      rootMargin: "50px" 
+    });
+
+    items.forEach((item) => {
+      observer.observe(item);
+    });
+  });
+</script>
+
+<style>
+  .masonry-container {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .masonry-grid {
+    column-count: 1;
+    column-gap: 20px;
+  }
+  @media (min-width: 640px) { .masonry-grid { column-count: 2; } }
+  @media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
+  @media (min-width: 1440px) { .masonry-grid { column-count: 4; } }
+
+  /* 
+    --- 修复后的动画样式 ---
+    已移除 content-visibility 以修复布局错乱
+  */
+  .masonry-item {
+    break-inside: avoid; 
+    margin-bottom: 20px;
+    opacity: 0;
+    
+    /* 稍微减小位移距离，看起来更稳重 */
+    transform: translateY(20px);
+    
+    /* 保持丝滑的贝塞尔曲线 */
+    transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    
+    border-radius: 12px;
+    background: rgba(128, 128, 128, 0.05);
+    overflow: hidden;
+    position: relative;
+    
+    /* 保持 GPU 优化，但去掉可能导致兼容问题的属性 */
+    isolation: isolate; 
+    will-change: opacity, transform;
+  }
+
+  .masonry-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .gallery-link {
+    display: block;
+    position: relative;
+    cursor: zoom-in;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent; 
+  }
+
+  .gallery-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    
+    will-change: transform;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    
+    /* 硬件加速保持开启 */
+    backface-visibility: hidden; 
+    transform: translate3d(0, 0, 0); 
+  }
+
+  @media (hover: hover) {
+    .gallery-link:hover .gallery-img { 
+      transform: scale(1.025) translate3d(0, 0, 0); 
+    }
+  }
+
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 40%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: flex-end;
+    padding: 16px;
+    pointer-events: none;
+  }
+
+  .gallery-link:hover .overlay { opacity: 1; }
+
+  .title {
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transform: translateY(8px);
+    transition: transform 0.3s ease;
+    will-change: transform;
+  }
+
+  .gallery-link:hover .title { transform: translateY(0); }
+</style>

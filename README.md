@@ -1,36 +1,25 @@
-# Astro Multiverse
+![Astro Photo Grid Preview](./public/cover.png)
 
-[![Built with Astro](https://astro.badg.es/v2/built-with-astro/tiny.svg)](https://astro.build)
+# Astro Photo Grid
 
-Say hello to **Multiverse**, a slick, one-page gallery design with a fully functional lightbox.
+A minimal, single-page photo gallery for [Astro](https://astro.build/). See the [demo](https://astro-photo-grid.netlify.app/)!
+
+## Features
+
+- **Responsive, justified grid using modern CSS.** All layout and reflow logic is handled with pure CSS—no JS required for positioning!
+- **Automatic lightbox integration.** Images open in a full-screen preview using [Fancybox](https://fancyapps.com/fancybox/), which includes swipe, drag, pinch-to-zoom, and a customizable toolbar.
+- **Optimized image loading and sizing.** Images on the grid are optimized using Astro's [`<Image />` component](https://docs.astro.build/en/guides/images/). Images on the grid beyond the first screen are lazily loaded.
 
 ## Getting Started
 
-To get started with Astro Multiverse, follow these steps:
-
-```bash
-git clone https://github.com/AREA44/astro-multiverse
-cd astro-multiverse
-pnpm install
-pnpm dev
-```
-
-## How to Customize
-
-To customize Astro Multiverse, you can change your images in the `src/assets` directory.
-
-## License
-
-**Multivese** by [HTML5 UP](https://html5up.net). Free for personal and commercial use under the [CCA 3.0](https://html5up.net/license) license.
+1. Click "Use this template" and create a new repository.
+2. In `astro.config.mjs`, update `site` from `https://mysite.com` to your site URL.
+3. In `src/layouts/BaseLayout.astro`, update `siteName` to your site name.
+4. Replace the items in `src/images` with your own photos.
+5. Good to go!
 
 ## Credits
 
-Astro Multiverse uses the following resources:
-
-- Demo images by [Unsplash](https://unsplash.com)
-- [jQuery](https://jquery.com)
-- [Poptrox](https://github.com/ajlkn/jquery.poptrox)
-
-## Contributions
-
-Contributions to Astro Multiverse are welcome! If you have any suggestions or improvements, feel free to create a pull request.
+- CSS-only justified gallery layout from [Helmut Wandl](https://medium.com/@ehtmlu/css-image-grid-gallery-4ec8824560a1) and [SmolCSS](https://smolcss.dev/#smol-aspect-ratio-gallery)
+- [Fancybox](https://fancyapps.com/fancybox/) lightbox
+- All demo images from [Unsplash](https://unsplash.com/)
