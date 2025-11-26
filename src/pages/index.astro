@@ -3,47 +3,38 @@ import { Image } from "astro:assets";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
-import fs from "node:fs";
+// 使用 fs 的 promise 版本以提高构建时的并发处理能力
+import fs from "node:fs/promises";
+import path from "node:path";
 import { fileURLToPath } from "node:url";
-// 引入更强大的 exifr 库
-import exifr from "exifr";
+import ExifParser from "exif-parser";
 
-// --- 1. 图标定义 (保持不变) ---
+// 1. 定义 SVG 图标 (保持不变)
 const ICONS = {
-  camera: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>`,
+  camera: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2-2z"/><circle cx="12" cy="13" r="4"/></svg>`,
   lens: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="14.31" y1="8" x2="20.05" y2="17.94"/><line x1="9.69" y1="8" x2="21.17" y2="8"/><line x1="7.38" y1="12" x2="13.12" y2="2.06"/><line x1="9.69" y1="16" x2="3.95" y2="6.06"/><line x1="14.31" y1="16" x2="2.83" y2="16"/><line x1="16.62" y1="12" x2="10.88" y2="21.94"/></svg>`,
   aperture: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M22 12h-4"/><path d="M6 12H2"/><path d="M12 6V2"/><path d="M12 18v4"/></svg>`,
   shutter: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M22 12h-4"/><path d="M6 12H2"/><path d="M12 6V2"/><path d="M12 18v4"/></svg>`,
   iso: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 12h.01"/><path d="M12 12h.01"/><path d="M17 12h.01"/></svg>`,
 };
 
-// --- 2. 图片导入逻辑 ---
-
-// 用于 Image 组件的优化版 (WebP, 无 EXIF)
+// 2. 获取图片
+// 注意：这里的 Import 仅用于 Astro 处理和获取构建后的引用路径
 const images = import.meta.glob<{ default: ImageMetadata }>(
-  "../images/*.{jpg,jpeg,png,webp}",
+  "../images/*.{jpg,jpeg,png,webp,tiff}",
 );
-
-// 用于 Fancybox 下载/查看的原图 (保留 EXIF)
-const rawImages = import.meta.glob("../images/*.{jpg,jpeg,png,webp}", {
-  query: { url: true },
-});
 
 function formatShutterSpeed(time: number | undefined) {
   if (!time) return "";
   if (time >= 1) return `${time}s`;
   const fraction = Math.round(1 / time);
   return `1/${fraction}s`;
-}
-
-// --- 3. 数据处理 (构建时运行) ---
+} // 获取当前文件的目录路径，用于解析相对路径
+// 3. 数据预处理
 const imageEntries = await Promise.all(
-  Object.entries(images).map(async ([relativePath, image]) => {
+  Object.entries(images).map(async ([relativePath, imageLoader]) => {
     try {
-      const { default: imageData } = await image();
-      const rawImageModule = await rawImages[relativePath]();
-      const originalImageUrl = (rawImageModule as any).default;
-
+      const { default: imageData } = await imageLoader();
       const filename = relativePath.split("/").pop()?.split(".")[0] || "";
       const altText = filename
         .replace(/[-_]/g, " ")
@@ -52,98 +43,88 @@ const imageEntries = await Promise.all(
       let captionHtml = "";
 
       try {
-        const absolutePath = fileURLToPath(
-          new URL(relativePath, import.meta.url),
+        // 获取文件名
+        const imageFileName = path.basename(relativePath);
+        // 拼接源文件绝对路径
+        const imagePath = path.join(
+          process.cwd(),
+          "src",
+          "images",
+          imageFileName,
         );
+        // 读取文件
+        const buffer = await fs.readFile(imagePath);
 
-        if (fs.existsSync(absolutePath)) {
-          // 使用 exifr 解析 (更稳定，支持更多格式)
-          const exifData = await exifr.parse(absolutePath, {
-            tiff: true,
-            xmp: false,
-            icc: false,
-            ifd0: false,
-            exif: true,
-            gps: false,
-            // 只读取必要的 Tag，提升构建速度
-            pick: [
-              "Model",
-              "LensModel",
-              "FNumber",
-              "ExposureTime",
-              "ISO",
-              "FocalLength",
-              "FocalLengthIn35mmFormat",
-            ],
-          });
+        const parser = ExifParser.create(buffer);
+        const result = parser.parse();
 
-          if (exifData) {
-            const items: string[] = [];
-            const {
-              Model,
-              LensModel,
-              FNumber,
-              ExposureTime,
-              ISO,
-              FocalLength,
-              FocalLengthIn35mmFormat,
-            } = exifData;
+        if (result.tags) {
+          const {
+            Model,
+            LensModel,
+            FNumber,
+            ExposureTime,
+            ISO,
+            FocalLength,
+            FocalLengthIn35mmFormat,
+          } = result.tags;
 
-            if (Model)
-              items.push(
-                `<span class="exif-tag" title="Camera">${ICONS.camera} ${Model}</span>`,
-              );
+          const items: string[] = [];
 
-            if (LensModel)
-              items.push(
-                `<span class="exif-tag" title="Lens Model">${ICONS.lens} ${LensModel}</span>`,
-              );
+          if (Model)
+            items.push(
+              `<span class="exif-tag" title="Camera">${ICONS.camera} ${Model}</span>`,
+            );
+          if (LensModel)
+            items.push(
+              `<span class="exif-tag" title="Lens">${ICONS.lens} ${LensModel}</span>`,
+            );
 
-            const displayFocalLength = FocalLengthIn35mmFormat || FocalLength;
-            if (displayFocalLength)
-              items.push(
-                `<span class="exif-tag" title="Focal Length">${ICONS.lens} ${Math.round(displayFocalLength)}mm</span>`,
-              );
+          const displayFocal = FocalLengthIn35mmFormat || FocalLength;
+          if (displayFocal)
+            items.push(
+              `<span class="exif-tag" title="Focal Length">${ICONS.lens} ${displayFocal}mm</span>`,
+            );
 
-            if (FNumber)
-              items.push(
-                `<span class="exif-tag" title="Aperture">${ICONS.aperture} f/${FNumber}</span>`,
-              );
+          if (FNumber)
+            items.push(
+              `<span class="exif-tag" title="Aperture">${ICONS.aperture} f/${FNumber}</span>`,
+            );
+          if (ExposureTime)
+            items.push(
+              `<span class="exif-tag" title="Shutter">${ICONS.shutter} ${formatShutterSpeed(ExposureTime)}</span>`,
+            );
+          if (ISO)
+            items.push(
+              `<span class="exif-tag" title="ISO">${ICONS.iso} ${ISO}</span>`,
+            );
 
-            if (ExposureTime)
-              items.push(
-                `<span class="exif-tag" title="Shutter Speed">${ICONS.shutter} ${formatShutterSpeed(ExposureTime)}</span>`,
-              );
-
-            if (ISO)
-              items.push(
-                `<span class="exif-tag" title="ISO">${ICONS.iso} ${ISO}</span>`,
-              );
-
-            if (items.length > 0) {
-              captionHtml = `<div class="exif-info">${items.join("")}</div>`;
-            } else {
-              // 这是一个调试日志，如果在 Netlify 上看不到 EXIF，请检查构建日志
-              console.warn(`[Build Log] No EXIF tags found for: ${filename}`);
-            }
+          if (items.length > 0) {
+            captionHtml = `<div class="exif-info">${items.join("")}</div>`;
           }
-        } else {
-          console.error(`[Build Log] File not found on disk: ${absolutePath}`);
         }
       } catch (exifErr) {
-        // 关键：打印错误，防止静默失败
-        console.error(
-          `[Build Log] EXIF extraction failed for ${filename}:`,
-          exifErr,
+        // --- 修复点：添加类型断言 ---
+        const errorMsg =
+          exifErr instanceof Error ? exifErr.message : String(exifErr);
+        console.warn(
+          `[EXIF Skip] Could not read EXIF for ${filename}:`,
+          errorMsg,
         );
       }
 
       const captionText =
         captionHtml || `<div class="exif-filename">${filename}</div>`;
 
-      return { imageData, originalImageUrl, altText, captionText, filename };
+      return {
+        imageData,
+        originalSrc: imageData.src,
+        altText,
+        captionText,
+        filename,
+      };
     } catch (e) {
-      console.error(`[Build Log] Global error processing ${relativePath}:`, e);
+      console.error(`Error processing ${relativePath}`, e);
       return null;
     }
   }),
@@ -152,28 +133,36 @@ const imageEntries = await Promise.all(
 );
 ---
 
-<BaseLayout
-  title="Photo Gallery"
-  description="Masonry style gallery"
->
+<BaseLayout title="Photo Gallery" description="Masonry style gallery">
   <section class="masonry-container">
     <div class="masonry-grid" id="gallery-grid">
       {
-        imageEntries.map(({ imageData, originalImageUrl, altText, captionText }, index) => (
+        imageEntries.map(({ imageData, originalSrc, altText, captionText }, index) => (
           <div class="masonry-item">
+            <!-- 
+              核心修改：
+              href={originalSrc}: 确保 Fancybox 打开的是原始大图（通常是 JPG）
+              data-caption={captionText}: 包含服务端预渲染的 EXIF HTML
+            -->
             <a
-              href={originalImageUrl}
+              href={originalSrc}
               class="gallery-link"
               data-fancybox="gallery"
               data-caption={captionText}
               aria-label={`View ${altText}`}
+              data-width={imageData.width}
+              data-height={imageData.height}
             >
+              <!-- 
+                Image 组件:
+                src={imageData}: Astro 会自动处理压缩、生成 WebP
+                注意：这里不需要 force format="jpg"，让它生成 WebP 更快
+              -->
               <Image
                 src={imageData}
                 alt={altText}
                 width={600} 
-                decoding="async" 
-                format="webp"
+                decoding="async"
                 quality={80}
                 loading={index < 6 ? "eager" : "lazy"} 
                 fetchpriority={index < 2 ? "high" : "auto"}
@@ -191,41 +180,135 @@ const imageEntries = await Promise.all(
 </BaseLayout>
 
 <style is:global>
+  /* 保持你的 Fancybox 样式不变 */
   :root {
     --f-bg: #ffffff;
     --f-button-color: #333;
     --f-button-hover-color: #000;
   }
-  .fancybox__backdrop { background: rgba(255, 255, 255, 0.98) !important; will-change: opacity; }
-  .fancybox__slide { padding: 0 !important; display: flex; align-items: center; justify-content: center; }
-  .fancybox__content { transform: translate3d(0, 0, 0); will-change: transform, opacity; backface-visibility: hidden; }
-  .fancybox__content img, img.f-panzoom__content { border-radius: 8px !important; box-shadow: 0 10px 40px rgba(0,0,0,0.15) !important; }
-  @media (min-width: 1024px) { .fancybox__content { margin: 60px; } }
+  .fancybox__backdrop {
+    background: rgba(255, 255, 255, 0.98) !important;
+    will-change: opacity;
+  }
+  .fancybox__slide {
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .fancybox__content {
+    transform: translate3d(0, 0, 0); 
+    will-change: transform, opacity; 
+    backface-visibility: hidden;
+  }
+  .fancybox__content img, img.f-panzoom__content {
+    border-radius: 8px !important; 
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15) !important;
+  }
+  @media (min-width: 1024px) {
+    .fancybox__content { margin: 60px; }
+  }
+
+  /* --- EXIF 信息栏美化 (替换原有的样式) --- */
   
-  /* EXIF 信息栏布局 */
-  .fancybox__caption .exif-info { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px 16px; padding-top: 15px; }
-  .exif-tag { display: inline-flex; align-items: center; gap: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; color: #555; background: rgba(0,0,0,0.04); padding: 6px 10px; border-radius: 6px; white-space: nowrap; transition: color 0.2s, background 0.2s; }
-  .exif-tag:hover { background: rgba(0,0,0,0.08); color: #000; }
-  .exif-tag svg { width: 16px; height: 16px; opacity: 0.7; flex-shrink: 0; }
-  .exif-filename { font-size: 1rem; color: #888; font-style: italic; }
-  .fancybox__caption { color: #333; padding-bottom: 20px; }
+  /* 容器：使用 Flexbox 自动换行并居中 */
+  .fancybox__caption .exif-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;       /* 允许换行，防止手机上溢出 */
+    gap: 8px 12px;        /* 关键：行间距8px，列间距12px，把数据隔开 */
+    padding-top: 12px;
+    margin-top: 12px;
+    border-top: 1px solid rgba(0,0,0,0.06); /* 顶部加一条淡淡的分隔线 */
+  }
+
+  /* 每一个数据项 (胶囊样式) */
+  .exif-tag {
+    display: inline-flex;
+    align-items: center;
+    height: 28px;          /* 固定高度 */
+    padding: 0 10px;       /* 左右内边距 */
+    border-radius: 14px;   /* 圆角，形成胶囊形状 */
+    background-color: #f3f4f6; /* 浅灰色背景 */
+    color: #374151;        /* 深灰色文字 */
+    
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; /* 等宽字体让数字更好看 */
+    font-size: 0.8rem;     /* 稍微调小字号 */
+    font-weight: 500;
+    
+    transition: all 0.2s ease;
+    border: 1px solid transparent; /* 预留边框位置 */
+  }
+
+  /* 悬停效果 */
+  .exif-tag:hover {
+    background-color: #e5e7eb;
+    color: #111827;
+    transform: translateY(-1px); /* 微微上浮 */
+  }
+
+  /* 图标样式 */
+  .exif-tag svg {
+    width: 14px;
+    height: 14px;
+    margin-right: 6px;     /* 图标和文字的间距 */
+    color: #6b7280;        /* 图标颜色稍淡 */
+    flex-shrink: 0;        /* 防止图标被压缩 */
+  }
+
+  /* 如果不需要显示文件名，可以美化它，或者干脆隐藏 */
+  .exif-filename {
+    font-size: 0.9rem;
+    color: #9ca3af;
+    margin-top: 4px;
+  }
+
+  /* 修改 Fancybox 标题默认样式，避免太靠近图片 */
+  .fancybox__caption {
+    color: #333;
+    padding: 20px 0;
+  }
+
+  /* --- 移动端适配 --- */
+  @media (max-width: 640px) {
+    .fancybox__caption .exif-info {
+      gap: 6px 8px; /* 手机上间距稍微小一点 */
+    }
+    .exif-tag {
+      font-size: 0.75rem; /* 手机上字号更小 */
+      height: 24px;
+      padding: 0 8px;
+    }
+  }
 </style>
 
 <script>
   import { Fancybox } from "@fancyapps/ui";
 
+  // 绑定 Fancybox
   (Fancybox as any).bind('[data-fancybox="gallery"]', {
     preload: 3, 
     Thumbs: { autoStart: false },
-    Toolbar: { display: { right: ["close", "download"] } }, 
-    Images: { fit: "contain", zoom: true, Panzoom: { maxScale: 2 } },
-    Carousel: { transition: "slide", friction: 0.88 },
+    Toolbar: {
+      display: { right: ["close"] },
+    },
+    Images: { 
+      fit: "contain",
+      zoom: true,
+      Panzoom: { maxScale: 2 }
+    },
+    // 使用 HTML 作为 caption，这样 data-caption 里的 HTML 标签才会被渲染
+    Caption: {
+      type: "html",
+    },
     dragToClose: true,
     animated: true,
     showClass: "f-zoomInUp",
     hideClass: "f-fadeOut",
   });
 
+  // 瀑布流动画逻辑 (保持你的代码)
   document.addEventListener('DOMContentLoaded', () => {
     const items = document.querySelectorAll('.masonry-item');
     const observer = new IntersectionObserver((entries) => {
@@ -233,19 +316,32 @@ const imageEntries = await Promise.all(
         if (entry.isIntersecting) {
           const target = entry.target as HTMLElement;
           target.style.transitionDelay = `${i * 80}ms`;
-          requestAnimationFrame(() => { target.classList.add('visible'); });
+          requestAnimationFrame(() => {
+            target.classList.add('visible');
+          });
           observer.unobserve(target);
         }
       });
-    }, { threshold: 0.1, rootMargin: "50px" });
-
-    items.forEach((item) => { observer.observe(item); });
+    }, { 
+      threshold: 0.1, 
+      rootMargin: "50px" 
+    });
+    items.forEach((item) => observer.observe(item));
   });
 </script>
 
 <style>
-  .masonry-container { width: 100%; max-width: 1600px; margin: 0 auto; padding: 20px; }
-  .masonry-grid { column-count: 1; column-gap: 20px; }
+  /* 布局样式 (保持你的代码) */
+  .masonry-container {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .masonry-grid {
+    column-count: 1;
+    column-gap: 20px;
+  }
   @media (min-width: 640px) { .masonry-grid { column-count: 2; } }
   @media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
   @media (min-width: 1440px) { .masonry-grid { column-count: 4; } }
@@ -263,7 +359,10 @@ const imageEntries = await Promise.all(
     isolation: isolate; 
   }
 
-  .masonry-item.visible { opacity: 1; transform: translateY(0); }
+  .masonry-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
   .gallery-link {
     display: block;
@@ -284,7 +383,9 @@ const imageEntries = await Promise.all(
   }
 
   @media (hover: hover) {
-    .gallery-link:hover .gallery-img { transform: scale(1.025) translate3d(0, 0, 0); }
+    .gallery-link:hover .gallery-img { 
+      transform: scale(1.025) translate3d(0, 0, 0); 
+    }
   }
 
   .overlay {
@@ -300,6 +401,14 @@ const imageEntries = await Promise.all(
   }
 
   .gallery-link:hover .overlay { opacity: 1; }
-  .title { color: white; font-size: 0.9rem; font-weight: 500; transform: translateY(8px); transition: transform 0.3s ease; will-change: transform; }
+
+  .title {
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transform: translateY(8px);
+    transition: transform 0.3s ease;
+  }
+
   .gallery-link:hover .title { transform: translateY(0); }
 </style>
