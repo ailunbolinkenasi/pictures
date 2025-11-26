@@ -20,9 +20,6 @@ importers:
       astro:
         specifier: ^5.13.10
         version: 5.13.10(@types/node@24.5.2)(jiti@2.4.2)(rollup@4.52.0)(typescript@5.9.2)(yaml@2.8.0)
-      exif-parser:
-        specifier: ^0.1.12
-        version: 0.1.12
       exifr:
         specifier: ^7.1.3
         version: 7.1.3
@@ -1082,9 +1079,6 @@ packages:
 
   eventemitter3@5.0.1:
     resolution: {integrity: sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==}
-
-  exif-parser@0.1.12:
-    resolution: {integrity: sha512-c2bQfLNbMzLPmzQuOr8fy0csy84WmwnER81W88DzTp9CYNPJ6yzOj2EZAh9pywYpqHnshVLHQJ8WzldAyfY+Iw==}
 
   exifr@7.1.3:
     resolution: {integrity: sha512-g/aje2noHivrRSLbAUtBPWFbxKdKhgj/xr1vATDdUXPOFYJlQ62Ft0oy+72V6XLIpDJfHs6gXLbBLAolqOXYRw==}
@@ -3297,8 +3291,6 @@ snapshots:
       '@types/estree': 1.0.8
 
   eventemitter3@5.0.1: {}
-
-  exif-parser@0.1.12: {}
 
   exifr@7.1.3: {}
 

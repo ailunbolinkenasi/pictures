@@ -5,9 +5,10 @@ import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
-import ExifParser from "exif-parser";
+// 引入更强大的 exifr 库
+import exifr from "exifr";
 
-// --- 1. 图标定义 ---
+// --- 1. 图标定义 (保持不变) ---
 const ICONS = {
   camera: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>`,
   lens: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="14.31" y1="8" x2="20.05" y2="17.94"/><line x1="9.69" y1="8" x2="21.17" y2="8"/><line x1="7.38" y1="12" x2="13.12" y2="2.06"/><line x1="9.69" y1="16" x2="3.95" y2="6.06"/><line x1="14.31" y1="16" x2="2.83" y2="16"/><line x1="16.62" y1="12" x2="10.88" y2="21.94"/></svg>`,
@@ -18,14 +19,12 @@ const ICONS = {
 
 // --- 2. 图片导入逻辑 ---
 
-// A. 优化版图片：用于 <Image /> 组件 (Astro 会压缩、转 WebP、去 EXIF)
+// 用于 Image 组件的优化版 (WebP, 无 EXIF)
 const images = import.meta.glob<{ default: ImageMetadata }>(
   "../images/*.{jpg,jpeg,png,webp}",
 );
 
-// B. [关键修改] 原始版图片：使用 ?url 参数
-// 这告诉 Vite/Astro 不要处理它，直接把原文件复制到 dist 目录并返回路径
-// 这样生成的文件保留了完整的 EXIF 信息，供 Fancybox 下载或查看
+// 用于 Fancybox 下载/查看的原图 (保留 EXIF)
 const rawImages = import.meta.glob("../images/*.{jpg,jpeg,png,webp}", {
   query: { url: true },
 });
@@ -37,14 +36,11 @@ function formatShutterSpeed(time: number | undefined) {
   return `1/${fraction}s`;
 }
 
-// --- 3. 数据处理与 EXIF 提取 ---
+// --- 3. 数据处理 (构建时运行) ---
 const imageEntries = await Promise.all(
   Object.entries(images).map(async ([relativePath, image]) => {
     try {
-      // 获取优化后的元数据
       const { default: imageData } = await image();
-
-      // 获取原始文件 URL
       const rawImageModule = await rawImages[relativePath]();
       const originalImageUrl = (rawImageModule as any).default;
 
@@ -55,17 +51,34 @@ const imageEntries = await Promise.all(
 
       let captionHtml = "";
 
-      // 读取源文件系统提取 EXIF 用于 HTML 展示
       try {
         const absolutePath = fileURLToPath(
           new URL(relativePath, import.meta.url),
         );
-        if (fs.existsSync(absolutePath)) {
-          const buffer = fs.readFileSync(absolutePath);
-          const parser = ExifParser.create(buffer);
-          const result = parser.parse();
 
-          if (result.tags) {
+        if (fs.existsSync(absolutePath)) {
+          // 使用 exifr 解析 (更稳定，支持更多格式)
+          const exifData = await exifr.parse(absolutePath, {
+            tiff: true,
+            xmp: false,
+            icc: false,
+            ifd0: false,
+            exif: true,
+            gps: false,
+            // 只读取必要的 Tag，提升构建速度
+            pick: [
+              "Model",
+              "LensModel",
+              "FNumber",
+              "ExposureTime",
+              "ISO",
+              "FocalLength",
+              "FocalLengthIn35mmFormat",
+            ],
+          });
+
+          if (exifData) {
+            const items: string[] = [];
             const {
               Model,
               LensModel,
@@ -74,9 +87,7 @@ const imageEntries = await Promise.all(
               ISO,
               FocalLength,
               FocalLengthIn35mmFormat,
-            } = result.tags;
-
-            const items: string[] = [];
+            } = exifData;
 
             if (Model)
               items.push(
@@ -91,7 +102,7 @@ const imageEntries = await Promise.all(
             const displayFocalLength = FocalLengthIn35mmFormat || FocalLength;
             if (displayFocalLength)
               items.push(
-                `<span class="exif-tag" title="Focal Length">${ICONS.lens} ${displayFocalLength}mm</span>`,
+                `<span class="exif-tag" title="Focal Length">${ICONS.lens} ${Math.round(displayFocalLength)}mm</span>`,
               );
 
             if (FNumber)
@@ -111,11 +122,20 @@ const imageEntries = await Promise.all(
 
             if (items.length > 0) {
               captionHtml = `<div class="exif-info">${items.join("")}</div>`;
+            } else {
+              // 这是一个调试日志，如果在 Netlify 上看不到 EXIF，请检查构建日志
+              console.warn(`[Build Log] No EXIF tags found for: ${filename}`);
             }
           }
+        } else {
+          console.error(`[Build Log] File not found on disk: ${absolutePath}`);
         }
       } catch (exifErr) {
-        // 静默失败，不影响图片展示
+        // 关键：打印错误，防止静默失败
+        console.error(
+          `[Build Log] EXIF extraction failed for ${filename}:`,
+          exifErr,
+        );
       }
 
       const captionText =
@@ -123,7 +143,7 @@ const imageEntries = await Promise.all(
 
       return { imageData, originalImageUrl, altText, captionText, filename };
     } catch (e) {
-      console.error(`Error processing image ${relativePath}:`, e);
+      console.error(`[Build Log] Global error processing ${relativePath}:`, e);
       return null;
     }
   }),
@@ -141,11 +161,6 @@ const imageEntries = await Promise.all(
       {
         imageEntries.map(({ imageData, originalImageUrl, altText, captionText }, index) => (
           <div class="masonry-item">
-            {/* 
-              关键修改：
-              href 使用 originalImageUrl (原始 JPG/PNG)
-              Image 组件使用 imageData (Astro WebP)
-            */}
             <a
               href={originalImageUrl}
               class="gallery-link"
@@ -199,11 +214,10 @@ const imageEntries = await Promise.all(
 <script>
   import { Fancybox } from "@fancyapps/ui";
 
-  // 绑定 Fancybox
   (Fancybox as any).bind('[data-fancybox="gallery"]', {
     preload: 3, 
     Thumbs: { autoStart: false },
-    Toolbar: { display: { right: ["close", "download"] } }, // 添加 download 按钮
+    Toolbar: { display: { right: ["close", "download"] } }, 
     Images: { fit: "contain", zoom: true, Panzoom: { maxScale: 2 } },
     Carousel: { transition: "slide", friction: 0.88 },
     dragToClose: true,
@@ -212,7 +226,6 @@ const imageEntries = await Promise.all(
     hideClass: "f-fadeOut",
   });
 
-  // 瀑布流加载动画
   document.addEventListener('DOMContentLoaded', () => {
     const items = document.querySelectorAll('.masonry-item');
     const observer = new IntersectionObserver((entries) => {
