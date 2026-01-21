@@ -1,15 +1,14 @@
 ---
-import { Image } from "astro:assets";
+import { getImage, Image } from "astro:assets";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 // 使用 fs 的 promise 版本以提高构建时的并发处理能力
 import fs from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import ExifParser from "exif-parser";
 
-// 1. 定义 SVG 图标 (保持不变)
+// 1. 定义 SVG 图标
 const ICONS = {
   camera: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2-2z"/><circle cx="12" cy="13" r="4"/></svg>`,
   lens: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="14.31" y1="8" x2="20.05" y2="17.94"/><line x1="9.69" y1="8" x2="21.17" y2="8"/><line x1="7.38" y1="12" x2="13.12" y2="2.06"/><line x1="9.69" y1="16" x2="3.95" y2="6.06"/><line x1="14.31" y1="16" x2="2.83" y2="16"/><line x1="16.62" y1="12" x2="10.88" y2="21.94"/></svg>`,
@@ -19,7 +18,6 @@ const ICONS = {
 };
 
 // 2. 获取图片
-// 注意：这里的 Import 仅用于 Astro 处理和获取构建后的引用路径
 const images = import.meta.glob<{ default: ImageMetadata }>(
   "../images/*.{jpg,jpeg,png,webp,tiff}",
 );
@@ -29,12 +27,23 @@ function formatShutterSpeed(time: number | undefined) {
   if (time >= 1) return `${time}s`;
   const fraction = Math.round(1 / time);
   return `1/${fraction}s`;
-} // 获取当前文件的目录路径，用于解析相对路径
+}
+
 // 3. 数据预处理
 const imageEntries = await Promise.all(
   Object.entries(images).map(async ([relativePath, imageLoader]) => {
     try {
       const { default: imageData } = await imageLoader();
+
+      // --- 关键优化：生成 Fancybox 专用的高清优化图 ---
+      // 解决打开慢、内存溢出问题。WebP 格式体积小，2000px 足够全屏查看。
+      const optimizedBigImage = await getImage({
+        src: imageData,
+        format: "webp",
+        width: 2000,
+        quality: 90,
+      });
+
       const filename = relativePath.split("/").pop()?.split(".")[0] || "";
       const altText = filename
         .replace(/[-_]/g, " ")
@@ -43,18 +52,15 @@ const imageEntries = await Promise.all(
       let captionHtml = "";
 
       try {
-        // 获取文件名
+        // 读取 EXIF 逻辑
         const imageFileName = path.basename(relativePath);
-        // 拼接源文件绝对路径
         const imagePath = path.join(
           process.cwd(),
           "src",
           "images",
           imageFileName,
         );
-        // 读取文件
         const buffer = await fs.readFile(imagePath);
-
         const parser = ExifParser.create(buffer);
         const result = parser.parse();
 
@@ -104,7 +110,7 @@ const imageEntries = await Promise.all(
           }
         }
       } catch (exifErr) {
-        // --- 修复点：添加类型断言 ---
+        // 类型断言修复
         const errorMsg =
           exifErr instanceof Error ? exifErr.message : String(exifErr);
         console.warn(
@@ -117,8 +123,10 @@ const imageEntries = await Promise.all(
         captionHtml || `<div class="exif-filename">${filename}</div>`;
 
       return {
-        imageData,
-        originalSrc: imageData.src,
+        imageData, // 原始数据，用于生成缩略图
+        lightboxSrc: optimizedBigImage.src, // 优化后的大图 URL
+        lightboxWidth: optimizedBigImage.attributes.width, // 优化后的大图宽度
+        lightboxHeight: optimizedBigImage.attributes.height, // 优化后的大图高度
         altText,
         captionText,
         filename,
@@ -133,30 +141,37 @@ const imageEntries = await Promise.all(
 );
 ---
 
-<BaseLayout title="Photo Gallery" description="Masonry style gallery">
-  <section class="masonry-container">
-    <div class="masonry-grid" id="gallery-grid">
+<BaseLayout title="一个不为人知的摄影小站." description="Justified grid gallery">
+  <!-- 加载遮罩 -->
+  <div class="loading-screen" id="loading-screen">
+    <div class="loading-content">
+      <div class="loading-logo">📷</div>
+      <div class="loading-text">Loading...</div>
+      <div class="loading-progress"></div>
+    </div>
+  </div>
+
+  <section class="jg-container">
+    <div class="jg-grid" id="justified-grid">
       {
-        imageEntries.map(({ imageData, originalSrc, altText, captionText }, index) => (
-          <div class="masonry-item">
+        imageEntries.map(({ imageData, lightboxSrc, lightboxWidth, lightboxHeight, altText, captionText }, index) => (
+          <div class="jg-item" data-ar={(imageData as any).width / (imageData as any).height}>
             <!-- 
-              核心修改：
-              href={originalSrc}: 确保 Fancybox 打开的是原始大图（通常是 JPG）
-              data-caption={captionText}: 包含服务端预渲染的 EXIF HTML
+              href: 使用 lightboxSrc (WebP优化版)
+              data-width/height: 使用优化后的尺寸，确保 Fancybox 动画准确
             -->
             <a
-              href={originalSrc}
+              href={lightboxSrc}
               class="gallery-link"
               data-fancybox="gallery"
               data-caption={captionText}
               aria-label={`View ${altText}`}
-              data-width={imageData.width}
-              data-height={imageData.height}
+              data-width={lightboxWidth}
+              data-height={lightboxHeight}
             >
               <!-- 
-                Image 组件:
-                src={imageData}: Astro 会自动处理压缩、生成 WebP
-                注意：这里不需要 force format="jpg"，让它生成 WebP 更快
+                Image 组件 (缩略图):
+                width={600}: 作为缩略图基准；实际展示由布局尺寸控制
               -->
               <Image
                 src={imageData}
@@ -180,12 +195,12 @@ const imageEntries = await Promise.all(
 </BaseLayout>
 
 <style is:global>
-  /* 保持你的 Fancybox 样式不变 */
   :root {
     --f-bg: #ffffff;
     --f-button-color: #333;
     --f-button-hover-color: #000;
   }
+
   .fancybox__backdrop {
     background: rgba(255, 255, 255, 0.98) !important;
     will-change: opacity;
@@ -197,98 +212,175 @@ const imageEntries = await Promise.all(
     justify-content: center;
   }
   .fancybox__content {
-    transform: translate3d(0, 0, 0); 
-    will-change: transform, opacity; 
+    transform: translate3d(0, 0, 0);
+    will-change: transform, opacity;
     backface-visibility: hidden;
   }
   .fancybox__content img, img.f-panzoom__content {
-    border-radius: 8px !important; 
+    border-radius: 8px !important;
     box-shadow: 0 10px 40px rgba(0,0,0,0.15) !important;
   }
   @media (min-width: 1024px) {
     .fancybox__content { margin: 60px; }
   }
 
-  /* --- EXIF 信息栏美化 (替换原有的样式) --- */
-  
-  /* 容器：使用 Flexbox 自动换行并居中 */
+  /* --- EXIF 信息栏美化 --- */
   .fancybox__caption .exif-info {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;       /* 允许换行，防止手机上溢出 */
-    gap: 8px 12px;        /* 关键：行间距8px，列间距12px，把数据隔开 */
+    flex-wrap: wrap;
+    gap: 8px 12px;
     padding-top: 12px;
     margin-top: 12px;
-    border-top: 1px solid rgba(0,0,0,0.06); /* 顶部加一条淡淡的分隔线 */
+    border-top: 1px solid rgba(0,0,0,0.06);
   }
 
-  /* 每一个数据项 (胶囊样式) */
   .exif-tag {
     display: inline-flex;
     align-items: center;
-    height: 28px;          /* 固定高度 */
-    padding: 0 10px;       /* 左右内边距 */
-    border-radius: 14px;   /* 圆角，形成胶囊形状 */
-    background-color: #f3f4f6; /* 浅灰色背景 */
-    color: #374151;        /* 深灰色文字 */
-    
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; /* 等宽字体让数字更好看 */
-    font-size: 0.8rem;     /* 稍微调小字号 */
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 14px;
+    background-color: #f3f4f6;
+    color: #374151;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.8rem;
     font-weight: 500;
-    
     transition: all 0.2s ease;
-    border: 1px solid transparent; /* 预留边框位置 */
+    border: 1px solid transparent;
   }
 
-  /* 悬停效果 */
   .exif-tag:hover {
     background-color: #e5e7eb;
     color: #111827;
-    transform: translateY(-1px); /* 微微上浮 */
+    transform: translateY(-1px);
   }
 
-  /* 图标样式 */
   .exif-tag svg {
     width: 14px;
     height: 14px;
-    margin-right: 6px;     /* 图标和文字的间距 */
-    color: #6b7280;        /* 图标颜色稍淡 */
-    flex-shrink: 0;        /* 防止图标被压缩 */
+    margin-right: 6px;
+    color: #6b7280;
+    flex-shrink: 0;
   }
 
-  /* 如果不需要显示文件名，可以美化它，或者干脆隐藏 */
   .exif-filename {
     font-size: 0.9rem;
     color: #9ca3af;
     margin-top: 4px;
   }
 
-  /* 修改 Fancybox 标题默认样式，避免太靠近图片 */
   .fancybox__caption {
     color: #333;
     padding: 20px 0;
   }
 
-  /* --- 移动端适配 --- */
   @media (max-width: 640px) {
     .fancybox__caption .exif-info {
-      gap: 6px 8px; /* 手机上间距稍微小一点 */
+      gap: 6px 8px;
     }
     .exif-tag {
-      font-size: 0.75rem; /* 手机上字号更小 */
+      font-size: 0.75rem;
       height: 24px;
       padding: 0 8px;
+    }
+  }
+
+  /* Dark Mode - Manual Toggle */
+  html[data-theme="dark"] .fancybox__backdrop {
+    background: rgba(10, 10, 10, 0.98) !important;
+  }
+
+  html[data-theme="dark"] .fancybox__caption {
+    color: #f0f0f0;
+  }
+
+  html[data-theme="dark"] .fancybox__caption .exif-info {
+    border-top-color: rgba(255, 255, 255, 0.08);
+  }
+
+  html[data-theme="dark"] .exif-tag {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  html[data-theme="dark"] .exif-tag:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  html[data-theme="dark"] .exif-tag svg {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  html[data-theme="dark"] .exif-filename {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  html[data-theme="dark"] .fancybox__content img,
+  html[data-theme="dark"] img.f-panzoom__content {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  /* Dark Mode - System Preference */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .fancybox__backdrop {
+      background: rgba(10, 10, 10, 0.98) !important;
+    }
+
+    :root:not([data-theme="light"]) .fancybox__caption {
+      color: #f0f0f0;
+    }
+
+    :root:not([data-theme="light"]) .fancybox__caption .exif-info {
+      border-top-color: rgba(255, 255, 255, 0.08);
+    }
+
+    :root:not([data-theme="light"]) .exif-tag {
+      background-color: rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    :root:not([data-theme="light"]) .exif-tag:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.95);
+    }
+
+    :root:not([data-theme="light"]) .exif-tag svg {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    :root:not([data-theme="light"]) .exif-filename {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    :root:not([data-theme="light"]) .fancybox__content img,
+    :root:not([data-theme="light"]) img.f-panzoom__content {
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4) !important;
+    }
+  }
+
+  /* Dark Mode - Loading Screen */
+  html[data-theme="dark"] .loading-screen {
+    background: transparent;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .loading-screen {
+      background: transparent;
     }
   }
 </style>
 
 <script>
   import { Fancybox } from "@fancyapps/ui";
+  // @ts-ignore
+  import justifiedLayout from "justified-layout";
 
   // 绑定 Fancybox
   (Fancybox as any).bind('[data-fancybox="gallery"]', {
-    preload: 3, 
+    preload: 2, // 减少预加载数量以节省带宽
     Thumbs: { autoStart: false },
     Toolbar: {
       display: { right: ["close"] },
@@ -296,11 +388,15 @@ const imageEntries = await Promise.all(
     Images: { 
       fit: "contain",
       zoom: true,
-      Panzoom: { maxScale: 2 }
+      Panzoom: { maxScale: 2 },
+      protected: true, // 防止某些 WebP 被错误处理
     },
-    // 使用 HTML 作为 caption，这样 data-caption 里的 HTML 标签才会被渲染
     Caption: {
       type: "html",
+    },
+    // 错误处理本地化
+    l10n: {
+      ERROR: "图片加载失败，请检查网络连接",
     },
     dragToClose: true,
     animated: true,
@@ -308,60 +404,242 @@ const imageEntries = await Promise.all(
     hideClass: "f-fadeOut",
   });
 
-  // 瀑布流动画逻辑 (保持你的代码)
+  // Justified Grid 渲染与动画逻辑
   document.addEventListener('DOMContentLoaded', () => {
-    const items = document.querySelectorAll('.masonry-item');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry, i) => {
+    const loadingScreen = document.getElementById('loading-screen') as HTMLElement;
+    const container = document.getElementById('justified-grid') as HTMLElement | null;
+    const items = container ? Array.from(container.querySelectorAll('.jg-item')) as HTMLElement[] : [];
+
+    // 图片交错进入动画
+    let visibleCount = 0;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const target = entry.target as HTMLElement;
-          target.style.transitionDelay = `${i * 80}ms`;
+          const delay = Math.min(visibleCount * 60, 800); // 最大延迟 800ms
+          target.style.transitionDelay = `${delay}ms`;
+
+          // 先执行模糊动画
           requestAnimationFrame(() => {
             target.classList.add('visible');
           });
-          observer.unobserve(target);
+
+          // 延迟后移除模糊效果
+          setTimeout(() => {
+            target.classList.add('sharp');
+          }, delay + 400);
+
+          visibleCount++;
+          io.unobserve(target);
         }
       });
-    }, { 
-      threshold: 0.1, 
-      rootMargin: "50px" 
+    },
+    {
+      threshold: 0.1,
+      rootMargin: "50px"
     });
-    items.forEach((item) => observer.observe(item));
+
+    function targetRowHeightFor(width: number) {
+      if (width < 640) return 180;
+      if (width < 1024) return 220;
+      return 260;
+    }
+    function boxSpacingFor(width: number) {
+      if (width < 640) return 8;
+      if (width < 1024) return 12;
+      return 16;
+    }
+
+    function renderLayout() {
+      if (!container) return;
+      const width = container.clientWidth;
+      const aspectRatios = items.map(el => {
+        const v = parseFloat(el.dataset.ar || "1");
+        return Number.isFinite(v) && v > 0 ? v : 1;
+      });
+
+      const layout = justifiedLayout(aspectRatios, {
+        containerWidth: width,
+        targetRowHeight: targetRowHeightFor(width),
+        boxSpacing: boxSpacingFor(width),
+        containerPadding: 0,
+      } as any);
+
+      container.style.height = `${layout.containerHeight}px`;
+      layout.boxes.forEach((b: any, i: number) => {
+        const el = items[i];
+        el.style.position = 'absolute';
+        el.style.left = `${b.left}px`;
+        el.style.top = `${b.top}px`;
+        el.style.width = `${b.width}px`;
+        el.style.height = `${b.height}px`;
+      });
+
+      // 重新绑定进入视口动画
+      items.forEach(el => io.observe(el));
+
+      // 淡出加载遮罩
+      if (loadingScreen) {
+        requestAnimationFrame(() => {
+          loadingScreen.classList.add('fade-out');
+          // 动画完成后移除元素
+          setTimeout(() => {
+            loadingScreen.style.display = 'none';
+          }, 600);
+        });
+      }
+    }
+
+    let raf = 0;
+    function onResize() {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(renderLayout);
+    }
+
+    window.addEventListener('resize', onResize, { passive: true });
+    renderLayout();
   });
 </script>
 
 <style>
-  /* 布局样式 (保持你的代码) */
-  .masonry-container {
+  /* 加载遮罩 - 现代优雅设计 */
+  .loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0.6s step-end;
+    will-change: opacity;
+  }
+
+  .loading-screen.fade-out {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .loading-content {
+    text-align: center;
+    transform: translateY(0);
+    padding: 40px 56px;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                0 2px 8px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .loading-logo {
+    font-size: 56px;
+    margin-bottom: 20px;
+    animation: logoFloat 2s ease-in-out infinite;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+  }
+
+  @keyframes logoFloat {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
+  }
+
+  .loading-text {
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    margin-bottom: 24px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    animation: textPulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes textPulse {
+    0%, 100% {
+      opacity: 0.85;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  .loading-progress {
+    width: 140px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .loading-progress::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.6);
+    animation: progressSlide 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    transform-origin: left;
+  }
+
+  @keyframes progressSlide {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* 布局样式 */
+  .main-content {
+    padding-top: 64px; /* 为导航栏留出空间 */
+  }
+
+  .jg-container {
     width: 100%;
     max-width: 1600px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 24px 20px;
   }
-  .masonry-grid {
-    column-count: 1;
-    column-gap: 20px;
+  .jg-grid {
+    position: relative;
+    min-height: 200px;
   }
-  @media (min-width: 640px) { .masonry-grid { column-count: 2; } }
-  @media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
-  @media (min-width: 1440px) { .masonry-grid { column-count: 4; } }
 
-  .masonry-item {
-    break-inside: avoid; 
-    margin-bottom: 20px;
+  .jg-item {
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(30px) scale(0.95);
+    filter: blur(10px);
+    transition:
+      opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     border-radius: 12px;
     background: rgba(128, 128, 128, 0.05);
     overflow: hidden;
     position: relative;
-    isolation: isolate; 
+    isolation: isolate;
+    will-change: opacity, transform, filter;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
-  .masonry-item.visible {
+  .jg-item.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
+  }
+
+  .jg-item.sharp {
+    filter: blur(0);
   }
 
   .gallery-link {
@@ -375,16 +653,17 @@ const imageEntries = await Promise.all(
   .gallery-img {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
     will-change: transform;
-    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    backface-visibility: hidden; 
-    transform: translate3d(0, 0, 0); 
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    object-fit: cover;
   }
 
   @media (hover: hover) {
-    .gallery-link:hover .gallery-img { 
-      transform: scale(1.025) translate3d(0, 0, 0); 
+    .gallery-link:hover .gallery-img {
+      transform: scale(1.04) translateZ(0);
     }
   }
 

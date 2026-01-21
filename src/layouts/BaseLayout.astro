@@ -3,8 +3,9 @@ import "@/styles/reset.css";
 import "@/styles/base.css";
 
 import smartypants from "smartypants";
+import Navbar from "@/components/Navbar.astro";
 
-const siteName = "Astro Photo Grid";
+const siteName = "Photo Gallery";
 
 export interface Props {
   title: string;
@@ -21,7 +22,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const pageTitle = Astro.url.pathname === "/" ? title : `${title} · ${siteName}`;
 ---
 
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -34,7 +35,7 @@ const pageTitle = Astro.url.pathname === "/" ? title : `${title} · ${siteName}`
     <meta property="og:type" content="website" />
     <meta property="og:description" content={smartypants(description, 1)} />
     <meta property="og:url" content={canonicalURL} />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content="zh_CN" />
     <meta property="og:site_name" content={siteName} />
     {
       image && (
@@ -46,6 +47,9 @@ const pageTitle = Astro.url.pathname === "/" ? title : `${title} · ${siteName}`
     }
   </head>
   <body>
-    <slot />
+    <Navbar />
+    <main class="main-content">
+      <slot />
+    </main>
   </body>
 </html>

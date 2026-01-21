@@ -1,0 +1,536 @@
+---
+interface NavItem {
+  label: string;
+  href: string;
+  icon?: string;
+}
+
+const navItems: NavItem[] = [
+  { label: "作品画廊", href: "/", icon: "📸" },
+  { label: "世界足迹", href: "/map", icon: "🌍" },
+  { label: "摄影时间轴", href: "/timeline", icon: "📅" },
+  { label: "数据统计", href: "/stats", icon: "📊" },
+  { label: "分类相册", href: "/albums", icon: "📂" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="navbar">
+  <div class="navbar-container">
+    <!-- Logo -->
+    <a href="/" class="nav-logo">
+      <span class="logo-icon">📷</span>
+      <span class="logo-text">iren.</span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <div class="nav-links">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class:list={["nav-link", { active: item.href === currentPath }]}
+        >
+          <span class="nav-icon">{item.icon}</span>
+          <span class="nav-label">{item.label}</span>
+        </a>
+      ))}
+    </div>
+
+    <!-- Right Actions -->
+    <div class="nav-actions">
+      <button class="action-btn" aria-label="主题切换" id="theme-toggle">
+        <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+      <button class="action-btn mobile-menu-toggle" aria-label="菜单" id="mobile-menu-toggle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-content">
+      {navItems.map((item) => (
+        <a href={item.href} class="mobile-nav-link">
+          <span class="mobile-nav-icon">{item.icon}</span>
+          <span class="mobile-nav-label">{item.label}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</nav>
+
+<style>
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+    transform: translateZ(0);
+  }
+
+  .navbar.hidden {
+    transform: translateY(-100%);
+  }
+
+  .navbar-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Logo */
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .nav-logo:hover {
+    transform: scale(1.05);
+  }
+
+  .logo-icon {
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  .logo-text {
+    font-size: 18px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Desktop Navigation */
+  .nav-links {
+    display: flex;
+    gap: 4px;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .nav-icon {
+    font-size: 16px;
+  }
+
+  .nav-label {
+    opacity: 0.9;
+  }
+
+  .nav-link:hover {
+    background: rgba(102, 126, 234, 0.08);
+    color: rgba(102, 126, 234, 0.95);
+    transform: translateY(-1px);
+  }
+
+  .nav-link.active {
+    background: rgba(102, 126, 234, 0.12);
+    color: rgba(102, 126, 234, 1);
+    font-weight: 600;
+  }
+
+  .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 2px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 2px;
+  }
+
+  /* Action Buttons */
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .action-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .action-btn:hover {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.95);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .action-btn:active {
+    transform: translateY(0);
+  }
+
+  #theme-toggle .moon-icon {
+    display: none;
+  }
+
+  /* Mobile Menu */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 9998;
+  }
+
+  .mobile-menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .mobile-menu-content {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 24px;
+    gap: 4px;
+  }
+
+  .mobile-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .mobile-nav-link:hover {
+    background: rgba(102, 126, 234, 0.08);
+    color: rgba(102, 126, 234, 0.95);
+  }
+
+  .mobile-nav-icon {
+    font-size: 20px;
+  }
+
+  .mobile-menu-toggle {
+    display: none;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+    }
+
+    .mobile-menu {
+      display: block;
+    }
+
+    .mobile-menu-toggle {
+      display: flex;
+    }
+  }
+
+  /* Dark Mode - Manual Toggle */
+  html[data-theme="dark"] .navbar {
+    background: rgba(20, 20, 20, 0.9);
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  html[data-theme="dark"] .navbar.hidden {
+    box-shadow: none;
+  }
+
+  html[data-theme="dark"] .logo-text {
+    background: linear-gradient(135deg, #a5b4fc 0%, #c4b5fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  html[data-theme="dark"] .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  html[data-theme="dark"] .nav-link:hover {
+    background: rgba(165, 180, 252, 0.12);
+    color: rgba(165, 180, 252, 0.95);
+  }
+
+  html[data-theme="dark"] .nav-link.active {
+    background: rgba(165, 180, 252, 0.18);
+    color: rgba(165, 180, 252, 1);
+  }
+
+  html[data-theme="dark"] .action-btn {
+    background: rgba(40, 40, 40, 0.6);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  html[data-theme="dark"] .action-btn:hover {
+    background: rgba(60, 60, 60, 0.9);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  html[data-theme="dark"] .mobile-menu {
+    background: rgba(20, 20, 20, 0.95);
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+  }
+
+  html[data-theme="dark"] .mobile-nav-link {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  html[data-theme="dark"] .mobile-nav-link:hover {
+    background: rgba(165, 180, 252, 0.12);
+    color: rgba(165, 180, 252, 0.95);
+  }
+
+  /* Dark Mode - System Preference */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .navbar {
+      background: rgba(20, 20, 20, 0.9);
+      border-bottom-color: rgba(255, 255, 255, 0.06);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    :root:not([data-theme="light"]) .logo-text {
+      background: linear-gradient(135deg, #a5b4fc 0%, #c4b5fd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    :root:not([data-theme="light"]) .nav-link {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    :root:not([data-theme="light"]) .nav-link:hover {
+      background: rgba(165, 180, 252, 0.12);
+      color: rgba(165, 180, 252, 0.95);
+    }
+
+    :root:not([data-theme="light"]) .nav-link.active {
+      background: rgba(165, 180, 252, 0.18);
+      color: rgba(165, 180, 252, 1);
+    }
+
+    :root:not([data-theme="light"]) .action-btn {
+      background: rgba(40, 40, 40, 0.6);
+      border-color: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    :root:not([data-theme="light"]) .action-btn:hover {
+      background: rgba(60, 60, 60, 0.9);
+      border-color: rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    :root:not([data-theme="light"]) .mobile-menu {
+      background: rgba(20, 20, 20, 0.95);
+      border-bottom-color: rgba(255, 255, 255, 0.06);
+    }
+
+    :root:not([data-theme="light"]) .mobile-nav-link {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    :root:not([data-theme="light"]) .mobile-nav-link:hover {
+      background: rgba(165, 180, 252, 0.12);
+      color: rgba(165, 180, 252, 0.95);
+    }
+  }
+
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    .navbar,
+    .nav-link,
+    .nav-logo,
+    .action-btn,
+    .mobile-menu {
+      transition: none;
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  // Mobile Menu Toggle
+  const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  mobileMenuToggle?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('open');
+  });
+
+  // Close mobile menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (mobileMenu && !mobileMenu.contains(e.target as Node) && !mobileMenuToggle?.contains(e.target as Node)) {
+      mobileMenu.classList.remove('open');
+    }
+  });
+
+  // Theme Toggle
+  const themeToggle = document.getElementById('theme-toggle');
+  const sunIcon = document.querySelector('.sun-icon') as HTMLElement;
+  const moonIcon = document.querySelector('.moon-icon') as HTMLElement;
+
+  themeToggle?.addEventListener('click', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const newTheme = isDark ? 'light' : 'dark';
+
+    document.documentElement.setAttribute('data-theme', newTheme);
+
+    if (newTheme === 'dark') {
+      sunIcon?.style.setProperty('display', 'none');
+      moonIcon?.style.setProperty('display', 'block');
+    } else {
+      sunIcon?.style.setProperty('display', 'block');
+      moonIcon?.style.setProperty('display', 'none');
+    }
+
+    // Save preference
+    localStorage.setItem('theme', newTheme);
+  });
+
+  // Load saved theme
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    if (savedTheme === 'dark') {
+      sunIcon?.style.setProperty('display', 'none');
+      moonIcon?.style.setProperty('display', 'block');
+    }
+  }
+
+  // Auto hide/show navbar on scroll
+  let lastScrollTop = 0;
+  let scrollDirection = 'down';
+  let isScrolling = false;
+  let scrollTimeout: number | null = null;
+
+  const navbar = document.querySelector('.navbar') as HTMLElement;
+
+  function handleScroll() {
+    const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    // Don't hide if at the top
+    if (currentScrollTop <= 0) {
+      navbar?.classList.remove('hidden');
+      return;
+    }
+
+    // Calculate scroll direction
+    if (currentScrollTop > lastScrollTop) {
+      // Scrolling down
+      if (scrollDirection !== 'down' && currentScrollTop > 100) {
+        navbar?.classList.add('hidden');
+        // Close mobile menu when navbar hides
+        mobileMenu?.classList.remove('open');
+        scrollDirection = 'down';
+      }
+    } else {
+      // Scrolling up
+      if (scrollDirection !== 'up') {
+        navbar?.classList.remove('hidden');
+        scrollDirection = 'up';
+      }
+    }
+
+    lastScrollTop = currentScrollTop;
+  }
+
+  function scrollLoop() {
+    if (isScrolling) {
+      handleScroll();
+      isScrolling = false;
+    }
+  }
+
+  function onScroll() {
+    isScrolling = true;
+    if (!scrollTimeout) {
+      requestAnimationFrame(scrollLoop);
+      scrollTimeout = window.setTimeout(() => {
+        scrollTimeout = null;
+      }, 50);
+    }
+  }
+
+  // Use passive listener for better performance
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>

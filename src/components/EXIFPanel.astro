@@ -12,7 +12,6 @@ export interface Props {
 const { imageUrl, className = "" } = Astro.props;
 
 let exifData: string[] = [];
-let hasError = false;
 
 // 服务端异步加载 EXIF 数据
 if (imageUrl) {
@@ -23,12 +22,8 @@ if (imageUrl) {
     }
   } catch (error) {
     console.warn("加载 EXIF 数据失败:", error);
-    hasError = true;
   }
 }
-
-// 如果没有数据且不是 loading 状态（Astro 服务端渲染完即非 loading）
-const showEmpty = exifData.length === 0;
 ---
 
 <!-- 
@@ -74,28 +69,57 @@ const showEmpty = exifData.length === 0;
   const closeBtns = document.querySelectorAll('[data-action="close-exif"]');
 
   function closePanel() {
-    if (overlay) overlay.style.display = 'none';
-    // 这里你可以触发一个自定义事件告诉父级组件
+    if (!overlay) return;
+
+    // 添加关闭动画类
+    overlay.style.opacity = '0';
+    if (container) {
+      container.style.transform = 'translate3d(60px, 0, 0)';
+    }
+
+    // 动画结束后隐藏
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        // 重置状态以便下次打开
+        overlay.style.opacity = '';
+        if (container) {
+          container.style.transform = '';
+        }
+      }, 350); // 与动画时间匹配
+    });
+
+    // 触发自定义事件
     const event = new CustomEvent('exif-closed');
     window.dispatchEvent(event);
   }
 
-  // 点击遮罩层关闭
+  // 使用 passive 监听器优化滚动性能
   overlay?.addEventListener('click', (e) => {
     if (e.target === overlay) {
       closePanel();
     }
-  });
+  }, { passive: true });
 
   // 阻止容器冒泡
   container?.addEventListener('click', (e) => {
     e.stopPropagation();
+  }, { passive: true });
+
+  // 绑定关闭按钮，使用捕获阶段提升响应速度
+  closeBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      closePanel();
+    }, { passive: true });
   });
 
-  // 绑定关闭按钮
-  closeBtns.forEach(btn => {
-    btn.addEventListener('click', closePanel);
-  });
+  // 键盘 ESC 关闭支持
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay && overlay.style.display !== 'none') {
+      closePanel();
+    }
+  }, { passive: true });
 </script>
 
 <style>
@@ -106,35 +130,57 @@ const showEmpty = exifData.length === 0;
     right: 0;
     width: 100%;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     z-index: 10000;
-    display: flex; /* 默认显示，如果需要默认隐藏请改为 none */
+    display: flex;
     align-items: center;
     justify-content: flex-end;
-    animation: fadeIn 0.3s ease-out;
+    animation: fadeIn 0.4s ease-out;
+    will-change: opacity;
+    transform: translateZ(0);
   }
-  
-  /* 如果需要在父组件控制显隐，可以在这里加 .hidden 类 */
+
   .exif-overlay.hidden {
     display: none;
   }
 
-  /* ... 其余 CSS 保持你原来的代码 ... */
+  /* 玻璃岛屿样式 */
   .exif-container {
-    width: 350px;
-    max-width: 80vw;
+    width: 380px;
+    max-width: 85vw;
     height: 100vh;
-    background: var(--bg, #ffffff);
-    color: var(--text, #333333);
+    max-height: 100vh;
+
+    /* 玻璃态背景 */
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(32px) saturate(180%);
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+
+    /* 玻璃边框 */
+    border-left: 1px solid rgba(255, 255, 255, 0.8);
+    border-right: 1px solid rgba(255, 255, 255, 0.8);
+
+    /* 柔和的光晕效果 */
+    box-shadow:
+      -8px 0 32px rgba(0, 0, 0, 0.08),
+      0 8px 32px rgba(0, 0, 0, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+    color: rgba(30, 30, 30, 0.95);
     display: flex;
     flex-direction: column;
-    animation: slideInFromRight 0.3s ease-out;
-    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+    animation: slideInFromRight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    contain: layout style paint;
   }
 
   .exif-header {
-    padding: 20px;
-    border-bottom: 1px solid var(--border, #e1e5e9);
+    padding: 24px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.4);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -144,33 +190,60 @@ const showEmpty = exifData.length === 0;
   .exif-header h3 {
     margin: 0;
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 700;
+    background: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .exif-close-btn {
-    background: none;
-    border: none;
-    width: 32px;
-    height: 32px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     font-size: 16px;
-    color: var(--text, #333333);
-    transition: all 0.2s ease;
+    color: rgba(60, 60, 60, 0.9);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                background 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     margin-left: auto;
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    will-change: transform;
+    backface-visibility: hidden;
   }
 
   .exif-close-btn:hover {
-    background: var(--hover, #f1f3f4);
+    background: rgba(255, 255, 255, 0.85);
+    border-color: rgba(255, 255, 255, 0.9);
+    color: rgba(0, 0, 0, 0.95);
+    transform: scale(1.1) rotate(90deg);
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 1);
+  }
+
+  .exif-close-btn:active {
+    transform: scale(0.95) rotate(90deg);
   }
 
   .exif-content {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 0 20px;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    transform: translateZ(0);
   }
 
   .exif-list {
@@ -180,11 +253,18 @@ const showEmpty = exifData.length === 0;
   }
 
   .exif-item {
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border, #f1f3f4);
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
     font-size: 14px;
-    line-height: 1.5;
-    transition: all 0.2s ease;
+    line-height: 1.6;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    color: rgba(40, 40, 40, 0.9);
+    position: relative;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
   .exif-item:last-child {
@@ -192,10 +272,15 @@ const showEmpty = exifData.length === 0;
   }
 
   .exif-item:hover {
-    background: var(--hover, #f8f9fa);
-    border-radius: 4px;
-    padding-left: 8px;
-    padding-right: 8px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    padding: 16px 12px;
+    margin: 0 -12px;
+    color: rgba(0, 0, 0, 0.95);
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transform: translateX(4px) translateZ(0);
   }
 
   .exif-empty {
@@ -203,20 +288,24 @@ const showEmpty = exifData.length === 0;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 200px;
+    height: 240px;
     text-align: center;
-    color: var(--text, #666666);
+    color: rgba(100, 100, 100, 0.9);
+    padding: 20px;
   }
 
   .exif-empty p:first-child {
-    font-size: 16px;
-    margin-bottom: 16px;
+    font-size: 17px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    color: rgba(50, 50, 50, 0.95);
   }
 
   .exif-hint {
-    font-size: 12px;
-    line-height: 1.4;
-    max-width: 250px;
+    font-size: 13px;
+    line-height: 1.6;
+    max-width: 280px;
+    color: rgba(120, 120, 120, 0.85);
   }
 
   @keyframes fadeIn {
@@ -225,54 +314,146 @@ const showEmpty = exifData.length === 0;
   }
 
   @keyframes slideInFromRight {
-    from { transform: translateX(100%); }
-    to { transform: translateX(0); }
+    from {
+      transform: translate3d(60px, 0, 0);
+      opacity: 0;
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+    }
   }
 
-  /* 暗色模式支持 */
+  /* 暗色模式玻璃态 */
   @media (prefers-color-scheme: dark) {
+    .exif-overlay {
+      background: rgba(0, 0, 0, 0.6);
+    }
+
     .exif-container {
-      background: var(--bg, #1a1a1a);
-      color: var(--text, #ffffff);
+      background: rgba(20, 20, 20, 0.75);
+      backdrop-filter: blur(32px) saturate(180%);
+      -webkit-backdrop-filter: blur(32px) saturate(180%);
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow:
+        -8px 0 32px rgba(0, 0, 0, 0.4),
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      color: rgba(240, 240, 240, 0.95);
     }
-    
+
     .exif-header {
-      border-bottom-color: var(--border, #383838);
+      background: rgba(40, 40, 40, 0.4);
+      border-bottom-color: rgba(255, 255, 255, 0.08);
+      will-change: transform;
+      transform: translateZ(0);
     }
-    
+
+    .exif-header h3 {
+      background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    .exif-close-btn {
+      background: rgba(60, 60, 60, 0.5);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: rgba(220, 220, 220, 0.9);
+      box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
     .exif-close-btn:hover {
-      background: var(--hover, #333333);
+      background: rgba(80, 80, 80, 0.6);
+      border-color: rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.95);
+      box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
-    
+
     .exif-item {
-      border-bottom-color: var(--border, #383838);
+      border-bottom-color: rgba(255, 255, 255, 0.06);
+      color: rgba(220, 220, 220, 0.9);
     }
-    
+
     .exif-item:hover {
-      background: var(--hover, #2d2d2d);
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.95);
+      box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .exif-empty {
+      color: rgba(180, 180, 180, 0.85);
+    }
+
+    .exif-empty p:first-child {
+      color: rgba(220, 220, 220, 0.95);
+    }
+
+    .exif-hint {
+      color: rgba(160, 160, 160, 0.85);
     }
   }
 
   /* 响应式设计 */
   @media (max-width: 768px) {
     .exif-container {
-      width: 300px;
-      max-width: 70vw;
+      width: 320px;
+      max-width: 75vw;
+    }
+
+    .exif-header {
+      padding: 20px;
     }
   }
 
   @media (max-width: 480px) {
+    .exif-overlay {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
     .exif-container {
-      width: 280px;
-      max-width: 60vw;
+      width: 100%;
+      max-width: 100%;
+      border-left: none;
+      border-right: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.8);
+      animation-duration: 0.35s;
     }
-    
+
+    @media (prefers-color-scheme: dark) {
+      .exif-container {
+        border-top-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+
     .exif-header {
-      padding: 16px;
+      padding: 18px 16px;
     }
-    
+
+    .exif-header h3 {
+      font-size: 17px;
+    }
+
     .exif-content {
       padding: 0 16px;
+    }
+
+    .exif-item {
+      padding: 14px 0;
+    }
+
+    .exif-item:hover {
+      padding: 14px 12px;
+      margin: 0 -12px;
     }
   }
 
